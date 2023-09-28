@@ -1,4 +1,4 @@
-# Code Generation Tool with GPT Language Model
+# Code Generation Tool leveraging OpenAI GPT APIs
 
 Welcome to the Code Generation Tool, powered by GPT (Generative Pre-trained Transformer) Language Model. This tool 
 harnesses the capabilities of GPT to iteratively generate code based on user prompts. Think of it as giving a 
