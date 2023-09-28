@@ -1,8 +1,9 @@
 # Code Generation Tool leveraging OpenAI GPT APIs
 
-Welcome to the Code Generation Tool, powered by GPT (Generative Pre-trained Transformer) Language Model. This tool 
-harnesses the capabilities of GPT to iteratively generate code based on user prompts. Think of it as giving a 
-GPT model "vim" access to your project, allowing it to assist in code creation based on freeform text user requests.
+Welcome to the language-agnostic Code Generation Tool, powered by OpenAI GPT (Generative Pre-trained Transformer) APIs. 
+This tool harnesses the capabilities of GPT LLM to iteratively generate code based on user prompts. Think of it as 
+of giving a GPT model the "vim" access to your project, allowing it to assist in code creation based on freeform text
+user requests.
 
 ## Disclaimer
 **⚠️ Disclaimer: This README contains information on features and functionality that have not been implemented yet. 

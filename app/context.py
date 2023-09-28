@@ -1,3 +1,7 @@
+from app.completion import EvaluatedCompletion
+from app.prompt import Prompt
+
+
 class Context:
   """
     A class to represent the current context for code generation. It follows
@@ -18,6 +22,17 @@ class Context:
     self.goal_reached = False
     self.iteration_count = 0
     self.current_status = "Kickstarting..."
-    self.input_tokens_used = 0
-    self.output_tokens_used = 0
+    self.prompt_tokens_used = 0
+    self.completion_tokens_used = 0
+    self.total_tokens_used = 0
 
+    # List of pairs (Prompt, completion str, completion_issue_msg str)
+    self.conversation = []
+    # The completion produced some invalid result on a previous step
+    self.completion_error_message = None
+
+  def write_down(self, prompt: Prompt, completion: EvaluatedCompletion):
+    self.conversation.append((prompt, completion))
+
+  def write_down_completion_error(self, completion_err_str: str):
+    self.conversation[-1][1] = completion_err_str

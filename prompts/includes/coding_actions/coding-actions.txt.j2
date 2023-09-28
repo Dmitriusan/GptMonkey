@@ -1,5 +1,10 @@
-* LIST_FILES(<path from project root>)
-* READ_FILE(<file path and name>)
-* CREATE_FILE(<file path and name>)
-* MISSING_ACTION(<text description with details>) # Call it when you can not reach goal with existing actions
-* FINISH # finish iterations, user goal is reached
+- LIST_FILES:
+    path: path/from/project/root
+- READ_FILE:
+    path: /home/i/project1/README.md
+- CREATE_FILE:
+    path: /home/i/project1/README.md
+- MISSING_ACTION: # Call it when you cannot reach goal with available actions
+    text_description_with_details: can not read GIT history
+- FINISH: # Stop iterations because the user's goal is reached
+    success: True

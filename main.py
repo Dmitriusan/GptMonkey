@@ -2,12 +2,15 @@ import os
 import argparse
 
 from app import strategic_iterator
-from app.openai_util import set_api_key, generate_code_with_prompt
-from app.file_util import list_files_and_directories_in_dir
+from app.openai_util import set_api_key
 from app.context import Context
 
 
 def main():
+  # Change the script working directory to the main file directory
+  main_file_directory = os.path.dirname(os.path.abspath(__file__))
+  os.chdir(main_file_directory)
+
   set_api_key()  # Set the OpenAI API key from the environment variable
 
   parser = argparse.ArgumentParser(description="Code Generation Tool")
