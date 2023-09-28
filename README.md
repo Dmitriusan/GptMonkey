@@ -4,7 +4,7 @@ Welcome to the Code Generation Tool, powered by GPT (Generative Pre-trained Tran
 harnesses the capabilities of GPT to iteratively generate code based on user prompts. Think of it as giving a 
 GPT model "vim" access to your project, allowing it to assist in code creation based on freeform text user requests.
 
-# Disclaimer
+## Disclaimer
 **⚠️ Disclaimer: This README contains information on features and functionality that have not been implemented yet. 
 Almost everything described in this README is rather a placeholder, "vision" or "concept" than an existing 
 production-ready thing. Please wait until the first release, or feel free to contribute and suggest ideas. 

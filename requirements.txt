@@ -1,0 +1,5 @@
+openai~=0.28.1
+Jinja2~=3.1.2
+tqdm~=4.66.1
+
+# TODO: also consider https://pypi.org/project/openai-ratelimiter/ openai-ratelimiter is a simple and efficient rate limiter for the OpenAI API. It is designed to help prevent the API rate limit from being reached when using the OpenAI library. Currently, it supports only Redis as the caching service.
