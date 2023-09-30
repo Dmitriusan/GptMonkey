@@ -1,0 +1,27 @@
+[
+  {
+    "name": "preview_project_files",
+    "description": "call if you need to check content of existing project files to understand user task",
+    "parameters": {},
+    "returns": {
+      "type": "void"
+    }
+  },
+  {
+    "name": "store_task_decomposition",
+    "description": "Store steps of decomposed task",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "steps": {
+          "type": "array",
+          "description": "List of steps descriptions"
+        }
+      },
+      "required": ["steps"]
+    },
+    "returns": {
+      "type": "void"
+    }
+  }
+]

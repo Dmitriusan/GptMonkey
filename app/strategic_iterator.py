@@ -49,7 +49,7 @@ def highlevel_iteration(context: Context):
 
 
 def step(context: Context):
-  if context.conversation[-1][]
+  if context.conversation[-1].
   if context.iteration_count == 0:
     prompt = kickstart_prompt(context)
   else:
@@ -57,10 +57,6 @@ def step(context: Context):
     context.current_status = "Coding..."
 
   response = complete(context, prompt)
-
-  # TODO: error hangling when parsing yaml (expect invalid sometimes)
-  parsed_response = yaml.safe_load(response)
-
 
   try:
     parsed_response = yaml.safe_load(response)

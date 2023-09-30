@@ -1,0 +1,90 @@
+[
+  {
+    "name": "list_files",
+    "description": "List files in a given directory",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "Path from the project root where files should be listed"
+        }
+      },
+      "required": ["path"]
+    },
+    "returns": {
+      "type": "array",
+      "description": "List of files (and their sizes) and directories; directories have a '/' suffix"
+    }
+  },
+  {
+    "name": "read_file",
+    "description": "Read a file from a specified path",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "Absolute or relative path to the file to be read"
+        }
+      },
+      "required": ["path"]
+    },
+    "returns": {
+      "type": "string",
+      "description": "File contents"
+    }
+  },
+  {
+    "name": "create_file",
+    "description": "Create a file at a specified path",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "Absolute or relative path where the file should be created"
+        }
+      },
+      "required": ["path"]
+    },
+    "returns": {
+      "type": "boolean",
+      "description": "true if successful"
+    }
+  },
+  {
+    "name": "missing_action",
+    "description": "Call this when the action to achieve the goal is missing, or to suggest adding a function that would be very useful",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "text_description_with_details": {
+          "type": "string",
+          "description": "Details of the failure"
+        }
+      },
+      "required": ["text_description_with_details"]
+    },
+    "returns": {
+      "type": "void"
+    }
+  },
+  {
+    "name": "finish",
+    "description": "Call this to indicate that the user's goal is reached",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "description": "Indicate whether the goal was successfully achieved or not"
+        }
+      },
+      "required": ["success"]
+    },
+    "returns": {
+      "type": "void"
+    }
+  }
+]
