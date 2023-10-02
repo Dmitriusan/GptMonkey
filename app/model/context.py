@@ -1,4 +1,6 @@
 from app.model.completion import EvaluatedCompletion
+from app.model.conversation import Conversation
+from app.model.conversation_step import ConversationStep
 from app.model.prompt import Prompt
 
 
@@ -27,12 +29,12 @@ class Context:
     self.total_tokens_used = 0
 
     # List of pairs (Prompt, completion str, completion_issue_msg str)
-    self.conversation = []
-    # The completion produced some invalid result on a previous step
+    self.conversation = Conversation()
+
     self.completion_error_message = None
 
   def write_down(self, prompt: Prompt, completion: EvaluatedCompletion):
-    self.conversation.append((prompt, completion))
+    self.conversation.append(ConversationStep(prompt, completion))
 
   def write_down_completion_error(self, completion_err_str: str):
     self.conversation[-1][1] = completion_err_str

@@ -37,7 +37,7 @@ def highlevel_iteration(context: Context):
       TotalTUsed=context.prompt_tokens_used + context.completion_tokens_used
     )
 
-    step(context)
+    perform_step(context)
 
     # Update the progress bar
     progress_bar.update(1)
@@ -47,8 +47,10 @@ def highlevel_iteration(context: Context):
     print("Goal not reached; hard stopped")
 
 
-def step(context: Context):
-  if context.conversation[-1].
+def perform_step(context: Context):
+
+  if context.conversation[-1].completion_has_issues():
+    prompt =
   if context.iteration_count == 0:
     prompt = kickstart_prompt(context)
   else:
