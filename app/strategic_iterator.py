@@ -1,10 +1,9 @@
 # tqdm library makes the loops show a smart progress meter
 from tqdm import tqdm
-import pandas
 import yaml
 
 from app import openai_util
-from app.context import Context
+from app.model.context import Context
 from app.prompt_generator import kickstart_prompt
 
 tqdm.pandas()

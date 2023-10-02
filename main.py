@@ -3,7 +3,7 @@ import argparse
 
 from app import strategic_iterator
 from app.openai_util import set_api_key
-from app.context import Context
+from app.model.context import Context
 
 
 def main():

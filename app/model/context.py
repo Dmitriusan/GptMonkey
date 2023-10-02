@@ -1,5 +1,5 @@
-from app.completion import EvaluatedCompletion
-from app.prompt import Prompt
+from app.model.completion import EvaluatedCompletion
+from app.model.prompt import Prompt
 
 
 class Context:

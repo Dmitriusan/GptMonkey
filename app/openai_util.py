@@ -2,7 +2,7 @@ import os
 import openai
 import tiktoken
 
-from app.prompt import Prompt
+from app.model.prompt import Prompt
 
 
 # Function to set the OpenAI API key from the environment variable

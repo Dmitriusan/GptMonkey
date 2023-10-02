@@ -1,6 +1,6 @@
 import jinja2
 
-from app.prompt import Prompt
+from app.model.prompt import Prompt
 
 CODING_ACTIONS_TEMPLATE = 'includes/coding_actions/coding-actions.txt.j2'
 
