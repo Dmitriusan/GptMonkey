@@ -3,7 +3,9 @@ from tqdm import tqdm
 import yaml
 
 from app import openai_util
+from app.model.completion import EvaluatedCompletion
 from app.model.context import Context
+from app.openai_util import pretty_print_conversation
 from app.prompt_generator import kickstart_prompt
 
 tqdm.pandas()
@@ -49,7 +51,7 @@ def highlevel_iteration(context: Context):
 
 def perform_step(context: Context):
 
-  if context.conversation[-1].completion_has_issues():
+  if context.conversation.history[-1].completion_has_issues():
     prompt =
   if context.iteration_count == 0:
     prompt = kickstart_prompt(context)
@@ -64,7 +66,7 @@ def perform_step(context: Context):
   except yaml.YAMLError as e:
     # Handle the YAML parsing error here
     print(f"Error parsing YAML: {e}")
-    context.write_down_completion_error(str(e))
+    context.write_down_completion_issue(str(e))
     parsed_response = None  # You can set parsed_response to a default value or handle it accordingly
 
   if parsed_response:
@@ -76,17 +78,22 @@ def perform_step(context: Context):
 
 def complete(context, prompt):
   print(f"Prompt: {prompt}")
-  completion = openai_util.get_completion(prompt)
-  print(f"Completion: {completion}")
-  context.prompt_tokens_used += completion['usage']["prompt_tokens"]
-  context.completion_tokens_used += completion['usage']["completion_tokens"]
-  context.total_tokens_used += completion['usage']["total_tokens"]
-  if (len(completion['choices'])) > 1:
+  pretty_print_conversation(prompt.to_messages())
+
+  completion_response = openai_util.get_completion(prompt)
+
+  context.prompt_tokens_used += completion_response['usage']["prompt_tokens"]
+  context.completion_tokens_used += completion_response['usage']["completion_tokens"]
+  context.total_tokens_used += completion_response['usage']["total_tokens"]
+  if (len(completion_response['choices'])) > 1:
     print("!!! MULTIPLE CHOICES !!!")
-  response = extract_completion_str(completion)
-  context.write_down(prompt, response)
-  return response
+
+
+  completion_str = EvaluatedCompletion(completion_response)
+  context.write_down(prompt, completion_str)
+  pretty_print_conversation(completion_response.to_messages())
+  return completion_str
 
 
 def extract_completion_str(completion):
-  return completion['choices'][0]['message']['content']
+  return

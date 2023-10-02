@@ -2,9 +2,6 @@ import jinja2
 
 from app.model.prompt import Prompt
 
-CODING_ACTIONS_TEMPLATE = 'includes/coding_actions/coding-actions.txt.j2'
-
-
 # TODO: read from project or from user input
 technology_stack = "Python 3, Jinja2"
 

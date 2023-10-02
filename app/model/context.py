@@ -28,7 +28,7 @@ class Context:
     self.completion_tokens_used = 0
     self.total_tokens_used = 0
 
-    # List of pairs (Prompt, completion str, completion_issue_msg str)
+    # List of pairs (Prompt, content str, completion_issue_msg str)
     self.conversation = Conversation()
 
     self.completion_error_message = None
@@ -36,5 +36,5 @@ class Context:
   def write_down(self, prompt: Prompt, completion: EvaluatedCompletion):
     self.conversation.append(ConversationStep(prompt, completion))
 
-  def write_down_completion_error(self, completion_err_str: str):
-    self.conversation[-1][1] = completion_err_str
+  def write_down_completion_issue(self, completion_err_str: str):
+    self.conversation.history[-1].completion.issues.append(completion_err_str)

@@ -1,4 +1,4 @@
-from app.model.conversation_step import ConversationStep
+from app.model.function_call import FunctionCall
 
 
 class EvaluatedCompletion:
@@ -7,22 +7,23 @@ class EvaluatedCompletion:
   information about errors or issues it produces
 
     Attributes:
-        completion (str): Completion from a model.
+        content (str): Completion from a model.
         issues (List[str]): Information about issues related to this
-        completion (if the completion has produced some invalid result on a
+        content (if the completion has produced some invalid result on a
         previous step).
     """
 
-  def __init__(self, completion, issues):
+  def __init__(self, completion_response):
     """
     Initializes a new EvaluatedCompletion object.
 
     Args:
-      completion (str): Completion from a model.
-      issues (List[str]): Information about issues related to this completion.
+        completion_response (dict): the response from OpenAI content API.
     """
-    self.completion = completion
-    self.issues = issues or []
+    self.content = extract_content(completion_response)
+    self.function_call = FunctionCall(completion_response) \
+      if completion_response["function"] else None
+    self.issues = []
 
   def __str__(self):
     """
@@ -31,11 +32,12 @@ class EvaluatedCompletion:
     Returns:
       str: A string representation of the object.
     """
-    completion_str = f"Completion: {self.completion}" if self.completion is not None else "Completion: None"
     issues_str = "\n".join(
       [f"Issue {i + 1}: {issue}" for i, issue in enumerate(self.issues)])
-
-    return f"{completion_str}\n{issues_str}"
+    if self.content:
+      return f"Content: {self.content}\n{issues_str}"
+    elif self.function_call:
+      return f"Function: {self.function_call.name}\n{issues_str}"
 
   def to_messages(self):
     """
@@ -44,4 +46,12 @@ class EvaluatedCompletion:
     Returns:
       list: A singleton list of assistant message.
     """
-    return [{"role": "assistant", "content": self.completion}]
+    if self.content:
+      return [{"role": "assistant", "content": self.content}]
+    elif self.function_call:
+      return [{"role": "assistant", "content": self.content, "function_call":
+              self.function_call.to_payload()}]
+
+
+def extract_content(completion_response):
+  return completion_response['choices'][0]['message']['content']

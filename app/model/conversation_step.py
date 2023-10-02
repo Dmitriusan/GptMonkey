@@ -4,11 +4,11 @@ from app.model.prompt import Prompt
 
 class ConversationStep:
   """
-  A class that represents a step in a conversation, consisting of a prompt and its evaluated completion.
+  A class that represents a step in a conversation, consisting of a prompt and its evaluated content.
 
   Attributes:
     prompt (Prompt): The user and system prompts of the conversation step.
-    completion (EvaluatedCompletion): The evaluated completion generated in response to the prompt.
+    completion (EvaluatedCompletion): The evaluated content generated in response to the prompt.
   """
 
   def __init__(self, prompt: Prompt, completion: EvaluatedCompletion):
@@ -17,7 +17,7 @@ class ConversationStep:
 
     Args:
       prompt (Prompt): The user and system prompts of the conversation step.
-      completion (EvaluatedCompletion): The evaluated completion generated in response to the prompt.
+      completion (EvaluatedCompletion): The evaluated content generated in response to the prompt.
     """
     self.prompt = prompt
     self.completion = completion
@@ -27,7 +27,7 @@ class ConversationStep:
     Converts the step into a list of messages.
 
     Returns:
-      list: A list of messages (prompt(s) + completion).
+      list: A list of messages (prompt(s) + content).
     """
     prompt_messages = self.prompt.to_messages()
     completion_messages = self.completion.to_messages()
@@ -35,9 +35,9 @@ class ConversationStep:
 
   def completion_has_issues(self):
     """
-    Checks if the completion has any issues.
+    Checks if the content has any issues.
 
     Returns:
-      bool: True if there are issues with the completion, False otherwise.
+      bool: True if there are issues with the content, False otherwise.
     """
     return len(self.completion.issues) > 0

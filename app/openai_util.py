@@ -1,6 +1,8 @@
 import os
 import openai
 import tiktoken
+from tenacity import retry, wait_random_exponential, stop_after_attempt
+from termcolor import colored
 
 from app.model.prompt import Prompt
 
@@ -15,6 +17,8 @@ def set_api_key():
 
 
 # Function to generate code using OpenAI
+@retry(wait=wait_random_exponential(multiplier=1, max=40),
+       stop=stop_after_attempt(3))
 def get_completion(prompt: Prompt):
   # https://help.openai.com/en/articles/7042661-chatgpt-api-transition-guide
   completion = openai.ChatCompletion.create(
@@ -51,3 +55,25 @@ def num_tokens_from_messages(messages, model="gpt-3.5-turbo-0613"):
   else:
     raise NotImplementedError(f"""num_tokens_from_messages() is not presently implemented for model {model}.
   See https://github.com/openai/openai-python/blob/main/chatml.md for information on how messages are converted to tokens.""")
+
+
+# From https://cookbook.openai.com/examples/how_to_call_functions_with_chat_models
+def pretty_print_conversation(messages):
+  role_to_color = {
+    "system": "red",
+    "user": "green",
+    "assistant": "blue",
+    "function": "magenta",
+  }
+
+  for message in messages:
+    if message["role"] == "system":
+      print(colored(f"system: {message['content']}\n", role_to_color[message["role"]]))
+    elif message["role"] == "user":
+      print(colored(f"user: {message['content']}\n", role_to_color[message["role"]]))
+    elif message["role"] == "assistant" and message.get("function_call"):
+      print(colored(f"assistant: {message['function_call']}\n", role_to_color[message["role"]]))
+    elif message["role"] == "assistant" and not message.get("function_call"):
+      print(colored(f"assistant: {message['content']}\n", role_to_color[message["role"]]))
+    elif message["role"] == "function":
+      print(colored(f"function ({message['name']}): {message['content']}\n", role_to_color[message["role"]]))
