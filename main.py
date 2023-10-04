@@ -18,18 +18,18 @@ def main():
                       help="Path to the existing project on disk")
   parser.add_argument("--prompt_file_path", type=str,
                       help="with a change request from the user "
-                           "(high-level high_level_prompt) for code generation.")
+                           "(high-level programming_task) for code generation.")
 
   args = parser.parse_args()
 
   prompt_file_path = args.prompt_file_path
 
-  # Read the high_level_prompt from the file
+  # Read the programming_task from the file
   with open(prompt_file_path, "r") as prompt_file:
     high_level_prompt = prompt_file.read()
 
   context = Context(args.project_path, args.prompt_file_path, high_level_prompt)
-  strategic_iterator.highlevel_iteration(context)
+  strategic_iterator.highlevel_processing(context)
 
 
 if __name__ == "__main__":

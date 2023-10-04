@@ -22,7 +22,7 @@ class EvaluatedCompletion:
     """
     self.content = extract_content(completion_response)
     self.function_call = FunctionCall(completion_response) \
-      if completion_response["function"] else None
+      if completion_response["function_call"] is not None else None
     self.issues = []
 
   def __str__(self):

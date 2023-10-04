@@ -1,5 +1,9 @@
 # Project-specific
 user_codechange_prompt.txt
+.env
+.idea/aws.xml
+.idea/jupyter-settings.xml
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

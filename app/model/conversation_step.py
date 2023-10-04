@@ -11,7 +11,7 @@ class ConversationStep:
     completion (EvaluatedCompletion): The evaluated content generated in response to the prompt.
   """
 
-  def __init__(self, prompt: Prompt, completion: EvaluatedCompletion):
+  def __init__(self, prompt: Prompt, completion: EvaluatedCompletion = None):
     """
     Initializes a new ConversationStep object.
 
@@ -30,7 +30,12 @@ class ConversationStep:
       list: A list of messages (prompt(s) + content).
     """
     prompt_messages = self.prompt.to_messages()
-    completion_messages = self.completion.to_messages()
+
+    if self.completion:
+      completion_messages = self.completion.to_messages()
+    else:
+      completion_messages = []
+
     return prompt_messages + completion_messages
 
   def completion_has_issues(self):

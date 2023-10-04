@@ -1,0 +1,35 @@
+[
+  {
+    "name": "preview_project_files",
+    "description": "call if you need to check content of existing project files to understand user task",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "path_within_project": {
+          "type": "string",
+          "description": "The city and state, e.g. San Francisco, CA"
+        }
+      },
+      "required": [
+        "path_within_project"
+      ]
+    }
+  },
+  {
+    "name": "store_task_decomposition",
+    "description": "Store steps of decomposed task",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "steps": {
+          "type": "array",
+          "description": "List of steps descriptions",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": ["steps"]
+    }
+  }
+]

@@ -5,8 +5,8 @@ class FunctionCall:
   """
   A class that encapsulates function call at model completion
 
-    Attributes:
-    """
+  Attributes:
+  """
 
   def __init__(self, completion_response):
     if completion_response["function"]:

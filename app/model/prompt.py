@@ -1,6 +1,3 @@
-from app.model.conversation_step import ConversationStep
-
-
 class Prompt:
   """
   A class that encapsulates the prompt to OpenAI.
@@ -10,8 +7,8 @@ class Prompt:
     user_prompt (str or None): The user role prompt. Can be None.
   """
 
-  def __init__(self, user_prompt=None, system_prompt=None, functions=None,
-      function_call=None):
+  def __init__(self, system_prompt=None, user_prompt=None, functions=None,
+               function_call=None):
     """
     Initializes a new Prompt object with user and system prompts.
 
