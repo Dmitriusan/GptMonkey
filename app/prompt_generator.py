@@ -24,16 +24,16 @@ def decompose_prompt(context):
   """
   jinja_env = get_jinja_env()
 
-  system_prompt_templ = jinja_env.get_template('decompose/system_prompt.txt.j2')
+  system_prompt_templ = jinja_env.get_template('50-50-decompose/system_prompt.txt.j2')
   system_prompt = system_prompt_templ.render()
 
-  user_prompt_templ = jinja_env.get_template('decompose/user_prompt.txt.j2')
+  user_prompt_templ = jinja_env.get_template('50-decompose/user_prompt.txt.j2')
   user_prompt = user_prompt_templ.render(
     technology_stack=technology_stack,
     high_level_programming_task=context.programming_task,
   )
 
-  functions_file = jinja_env.get_template('decompose/functions.json').filename
+  functions_file = jinja_env.get_template('50-decompose/functions.json').filename
   with open(functions_file,  'r') as ff:
     functions = json.load(ff)
 
