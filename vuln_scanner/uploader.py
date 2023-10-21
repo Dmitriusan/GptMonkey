@@ -78,6 +78,7 @@ def upload_code(args):
         # effort to handle (too much for PoC)
         pretty_print_findings(findings)
         raise e
+      pretty_print_findings(findings)
 
 
 
@@ -115,6 +116,7 @@ def complete(context, prompt):
     print(f"Error: {e}: {completion_response}")
     raise e
   context.conversation.history[-1].completion = completion_for_evaluation
+  # pretty_print_conversation(context.conversation.to_messages())
   return completion_for_evaluation
 
 
