@@ -11,6 +11,12 @@ GPT and asks it to scan the code for vulnerabilities. Findings are then grouped 
 export OPENAI_API_KEY=<your API key>
 GptMonkey/vuln_scanner.py --project_path /tmp/WordPress/wp-admin
 ```
+Or, if you want to tune prompts, you may consider uploading just a sample of few files for analysis to speed up the 
+process and save costs:
+```shell
+export OPENAI_API_KEY=<your API key>
+GptMonkey/vuln_scanner.py --project_path /tmp/WordPress/wp-admin --samples 5
+```
 ## Example of output:
 ```text
 ----------------------------------------
