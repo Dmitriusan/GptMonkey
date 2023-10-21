@@ -35,7 +35,7 @@ def get_completion(conversation: Conversation):
     presence_penalty=0
   )
 
-  print(f"Completion: {completion}")
+  # print(f"Completion: {completion}")
   return completion
 
 

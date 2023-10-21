@@ -1,5 +1,6 @@
 import json
 import os.path
+import random
 
 from tqdm import tqdm
 
@@ -23,14 +24,24 @@ class Finding:
 def list_files(at_path):
   allowed_extensions = ['.php', '.java', '.cpp',
                         '.py', '.c', '.h', '.js']
+  forbidden_extensions = ['.min.js']
+
   all_files = file_utils.list_files(at_path)
   source_code_files = [file for file in all_files if
-                       os.path.splitext(file)[1] in allowed_extensions]
+                       os.path.splitext(file)[1] in allowed_extensions and
+                       os.path.splitext(file)[1] not in forbidden_extensions]
   return source_code_files
 
 
-def upload_code(project_path):
-  files = list_files(project_path)
+def upload_code(args):
+  project_path = args.project_path
+  samples = args.samples
+  all_files = list_files(project_path)
+  if not args.samples:
+    files = all_files
+  else:
+    random.shuffle(all_files)
+    files = all_files[:samples]
 
   findings = []
 
@@ -91,9 +102,13 @@ def complete(context, prompt):
   if (len(completion_response['choices'])) > 1:
     print("!!! MULTIPLE CHOICES !!!")
 
-  completion_for_evaluation = EvaluatedCompletion(completion_response)
+  try:
+    completion_for_evaluation = EvaluatedCompletion(completion_response)
+  except Exception as e:
+    pretty_print_conversation(context.conversation.to_messages())
+    print(f"Error: {e}: {completion_response}")
+    raise e
   context.conversation.history[-1].completion = completion_for_evaluation
-  # pretty_print_conversation(context.conversation.to_messages())
   return completion_for_evaluation
 
 

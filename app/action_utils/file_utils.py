@@ -9,7 +9,7 @@ def list_files(at_path):
       at_path (str): The path to the directory.
 
   Returns:
-      List[str]: A list of file paths relative to project_path.
+      List[str]: A list of file paths relative to at_path.
   """
   file_list = []
 
@@ -23,12 +23,15 @@ def list_files(at_path):
 
     # Check if it's a file
     if os.path.isfile(item_path):
-      # Make the file path relative to project_path
+      # Make the file path relative to at_path and add it to the list
       relative_path = os.path.relpath(item_path, at_path)
       file_list.append(relative_path)
     # If it's a directory, recursively call the function
     elif os.path.isdir(item_path):
-      file_list.extend(list_files(item_path))
+      # Get the list of files in the subdirectory
+      subdirectory_files = list_files(item_path)
+      # Append the files from the subdirectory to the result with the full relative path
+      file_list.extend([os.path.join(item, sub_file) for sub_file in subdirectory_files])
 
   return file_list
 

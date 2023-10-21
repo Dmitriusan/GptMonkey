@@ -17,9 +17,11 @@ def main():
   parser = argparse.ArgumentParser(description="Vulnerability scanner Tool")
   parser.add_argument("--project_path", type=str,
                       help="Path to the existing project on disk")
+  parser.add_argument("--samples", type=int,
+                      help="if specified, process only N source files")
 
   args = parser.parse_args()
-  uploader.upload_code(args.project_path)
+  uploader.upload_code(args)
 
 
 if __name__ == "__main__":
