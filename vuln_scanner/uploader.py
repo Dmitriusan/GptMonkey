@@ -55,24 +55,30 @@ def upload_code(args):
 
       code_fragments = code_splitter.split_code_to_optimal_fragments(project_path, target_file)
       # Generate a prompt for the file
-      for code_fragment in code_fragments:
-        context = Context(project_path, None, None)
-        prompt = prompt_generator.vuln_search_prompt(target_file, code_fragment)
-        convStep = ConversationStep(prompt)
-        context.conversation.append(convStep)
-        response = complete(context, prompt)
-        saved_findings = context.conversation.history[-1].completion.function_call.arguments
-        for finding in extract_findings(target_file, saved_findings):
-          findings.append(finding)
+      try:
+        for code_fragment in code_fragments:
+          context = Context(project_path, None, None)
+          prompt = prompt_generator.vuln_search_prompt(target_file, code_fragment)
+          convStep = ConversationStep(prompt)
+          context.conversation.append(convStep)
+          response = complete(context, prompt)
+          saved_findings = context.conversation.history[-1].completion.function_call.arguments
+          for finding in extract_findings(target_file, saved_findings):
+            findings.append(finding)
 
-        prompt_tokens_used += context.prompt_tokens_used
-        completion_tokens_used += context.completion_tokens_used
+          prompt_tokens_used += context.prompt_tokens_used
+          completion_tokens_used += context.completion_tokens_used
 
-        progress_bar.set_postfix(
-          PromptTUsed=prompt_tokens_used,
-          CompletTUsed=completion_tokens_used,
-        )
-    pretty_print_findings(findings)
+          progress_bar.set_postfix(
+            PromptTUsed=prompt_tokens_used,
+            CompletTUsed=completion_tokens_used,
+          )
+      except Exception as e:
+        # Due to fuzzy nature of completions, some errors require a lot of
+        # effort to handle (too much for PoC)
+        pretty_print_findings(findings)
+        raise e
+
 
 
 def extract_findings(file_path, arguments_dict):
