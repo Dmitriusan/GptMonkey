@@ -29,7 +29,7 @@ def get_completion(conversation: Conversation):
     functions=conversation.history[-1].prompt.functions,
     function_call=conversation.history[-1].prompt.function_call,
     temperature=1,
-    max_tokens=1000,
+    max_tokens=1300,
     top_p=1,
     frequency_penalty=0,
     presence_penalty=0

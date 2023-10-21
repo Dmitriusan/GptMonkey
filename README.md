@@ -1,3 +1,45 @@
+This repository is an incubator of multiple OpenAI GPT-based utilities for working with source code. As of now, it 
+consists of:
+- [Batch vulnerability scanner](#batch-vulnerability-scanner)
+- [Code Generation Tool leveraging OpenAI GPT APIs](#code-generation-tool-leveraging-openai-gpt-apis)
+
+# Batch vulnerability scanner
+The script splits source code files into chunks (trying to split between methods), uploads these files recursively to 
+GPT and asks it to scan the code for vulnerabilities. Findings are then grouped and pretty-printed
+## Usage 
+```shell
+export OPENAI_API_KEY=<your API key>
+GptMonkey/vuln_scanner.py --project_path /tmp/WordPress/wp-admin
+```
+## Example of output:
+```text
+----------------------------------------
+File Path: edit-form-comment.php
+Finding: Possible XSS vulnerability
+Code:
+    <div class="misc-pub-section misc-pub-comment-status" id="comment-status">
+    <?php _e( 'Status:' ); ?> <span id="comment-status-display">
+    <?php
+    switch ( $comment->comment_approved ) {
+    	case '1':
+    		_e( 'Approved' );
+    		break;
+    	case '0':
+    		_e( 'Pending' );
+    		break;
+    	case 'spam':
+    		_e( 'Spam' );
+    		break;
+    }
+    ?>
+    </span>
+----------------------------------------
+File Path: edit-form-comment.php
+Finding: Potential Cross-Site Scripting (XSS) vulnerability in the 'comment_status' field
+Code:
+    <label><input type="radio"<?php checked( $comment->comment_approved, '1' ); ?> name="comment_status" value="1" /><?php _ex( 'Approved', 'comment status' ); ?></label><br />
+```
+
 # Code Generation Tool leveraging OpenAI GPT APIs
 
 Welcome to the language-agnostic Code Generation Tool, powered by OpenAI GPT (Generative Pre-trained Transformer) APIs. 

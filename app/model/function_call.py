@@ -8,10 +8,9 @@ class FunctionCall:
   Attributes:
   """
 
-  def __init__(self, completion_response):
-    if completion_response["function"]:
-      self.name = completion_response["function"]["name"]
-      self.arguments = json.loads(completion_response["function"]["arguments"])
+  def __init__(self, function_call_object):
+    self.name = function_call_object["name"]
+    self.arguments = json.loads(function_call_object["arguments"])
 
 
   def to_payload(self):

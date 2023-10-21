@@ -1,0 +1,30 @@
+[
+  {
+    "name": "store_results",
+    "description": "Store a list of findings",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "findings": {
+          "type": "array",
+          "description": "A list of findings, or an empty list",
+          "items": {
+            "type": "object",
+            "properties": {
+              "finding": {
+                "type": "string",
+                "description": "Description of possible vulnerability"
+              },
+              "code": {
+                "type": "string",
+                "description": "Short code fragment or name of function"
+              }
+            },
+            "required": ["finding", "code"]
+          }
+        }
+      },
+      "required": ["findings"]
+    }
+  }
+]

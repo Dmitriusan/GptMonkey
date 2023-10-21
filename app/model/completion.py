@@ -1,3 +1,5 @@
+import pprint
+
 from app.model.function_call import FunctionCall
 
 
@@ -20,9 +22,12 @@ class EvaluatedCompletion:
     Args:
         completion_response (dict): the response from OpenAI content API.
     """
+    function_call_obj = extract_function_call(completion_response)
     self.content = extract_content(completion_response)
-    self.function_call = FunctionCall(completion_response) \
-      if completion_response["function_call"] is not None else None
+    if function_call_obj:
+      self.function_call = FunctionCall(function_call_obj)
+    else:
+      self.function_call = None
     self.issues = []
 
   def __str__(self):
@@ -52,6 +57,13 @@ class EvaluatedCompletion:
       return [{"role": "assistant", "content": self.content, "function_call":
               self.function_call.to_payload()}]
 
+def extract_finish_reason(completion_response):
+  return completion_response['choices'][0]['finish_reason']
+
 
 def extract_content(completion_response):
-  return completion_response['choices'][0]['message']['content']
+  return completion_response['choices'][0]['message'].get('content', None)
+
+
+def extract_function_call(completion_response):
+  return completion_response['choices'][0]['message'].get('function_call', None)
