@@ -24,12 +24,12 @@ class Finding:
 def list_files(at_path):
   allowed_extensions = ['.php', '.java', '.cpp',
                         '.py', '.c', '.h', '.js']
-  forbidden_extensions = ['.min.js']
+  forbidden_substrings = ['.min.js']
 
   all_files = file_utils.list_files(at_path)
   source_code_files = [file for file in all_files if
                        os.path.splitext(file)[1] in allowed_extensions and
-                       os.path.splitext(file)[1] not in forbidden_extensions]
+                       all(substring not in file for substring in forbidden_substrings)]
   return source_code_files
 
 
