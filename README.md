@@ -5,7 +5,9 @@ consists of:
 
 # Batch vulnerability scanner
 The script splits source code files into chunks (trying to split between methods), uploads these files recursively to 
-GPT and asks it to scan the code for vulnerabilities. Findings are then grouped and pretty-printed
+GPT and asks it to scan the code for vulnerabilities. Findings are then grouped and pretty-printed. Note: depending 
+on prompt and model used, findings may be too paranoid and consist almost entirely from false positives. You may 
+want to adjust `prompts/vulnerabilities/analyze` prompts to your case
 ## Usage 
 ```shell
 export OPENAI_API_KEY=<your API key>
