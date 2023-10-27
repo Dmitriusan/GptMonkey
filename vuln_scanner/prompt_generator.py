@@ -22,8 +22,16 @@ def vuln_search_prompt(target_file, code_fragment):
     code_fragment=code_fragment,
   )
 
-  functions_file = jinja_env.get_template('analyze/functions.json').filename
-  with open(functions_file,  'r') as ff:
+  metaparameters_file_path = jinja_env.get_template(
+    'analyze/metaparameters.json').filename
+  with open(metaparameters_file_path, 'r') as json_file:
+    data = json.load(json_file)
+    temperature = data.get("temperature", 1.0)
+
+
+  functions_file_path = jinja_env.get_template('analyze/functions.json').filename
+  with open(functions_file_path,  'r') as ff:
     functions = json.load(ff)
 
-  return Prompt(system_prompt, user_prompt, functions, {"name": "store_results"})
+  return Prompt(system_prompt, user_prompt, functions,
+                {"name": "store_results"}, temperature)

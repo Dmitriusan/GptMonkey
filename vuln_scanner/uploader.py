@@ -98,7 +98,8 @@ def complete(context, prompt):
   # print(f"Prompt: {prompt}")
   # pretty_print_conversation(prompt.to_messages())
 
-  completion_response = openai_util.get_completion(context.conversation)
+  completion_response = openai_util.get_completion(context.conversation,
+                                                   prompt.temperature)
 
   context.prompt_tokens_used += (
     completion_response)['usage']["prompt_tokens"]

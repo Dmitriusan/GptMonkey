@@ -21,14 +21,14 @@ def set_api_key():
 # Function to generate code using OpenAI
 # @retry(wait=wait_random_exponential(multiplier=1, max=40),
 #        stop=stop_after_attempt(3), retry=retry_if_not_exception_type(openai.InvalidRequestError)))
-def get_completion(conversation: Conversation):
+def get_completion(conversation: Conversation, temperature=1.0):
   # https://help.openai.com/en/articles/7042661-chatgpt-api-transition-guide
   completion = openai.ChatCompletion.create(
     model="gpt-3.5-turbo",
     messages=conversation.to_messages(),
     functions=conversation.history[-1].prompt.functions,
     function_call=conversation.history[-1].prompt.function_call,
-    temperature=1,
+    temperature=temperature,
     max_tokens=1300,
     top_p=1,
     frequency_penalty=0,
