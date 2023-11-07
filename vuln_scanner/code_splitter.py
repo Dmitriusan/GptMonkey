@@ -121,8 +121,8 @@ def split_code_to_optimal_fragments(at_path, target_file):
   :param target_file: The name of the target source code file.
   :return: A list of code fragments that adhere to the target token limit.
   """
-  start_code_fragment_size = 6000
-  target_number_of_tokens = 2500
+  start_code_fragment_size = 60000
+  target_number_of_tokens = 25000
   abs_file_path = os.path.join(at_path, target_file)
 
   code_fragment_size = start_code_fragment_size
