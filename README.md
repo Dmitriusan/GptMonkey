@@ -1,7 +1,18 @@
 This repository is an incubator of multiple OpenAI GPT-based utilities for working with source code. As of now, it 
 consists of:
+- [Scanner of eBay listings](#ebay-listings-scanner)
 - [Batch vulnerability scanner](#batch-vulnerability-scanner)
 - [Code Generation Tool leveraging OpenAI GPT APIs](#code-generation-tool-leveraging-openai-gpt-apis)
+
+# Scanner of eBay listings
+The scanner looks at fresh auctions and BUY IT NOW listings and filters out items using various heuristics (static, 
+customizable and AI-based), craving to find the best deals according to the custom catalog. The scanner is designed 
+to be run as a cron job. The idea is to "cherry-pick" the most prominent items with the best price/quality ratio. 
+eBay is a great marketplace to apply LLM-based tools for scanning, as it is a very competitive and fuzzy 
+environment that is not easy to navigate for a human, yet the prices are often well below the manufacturer's suggested
+retail price (MSRP) or recommended retail price (RRP). There are various challenges for auto-scans (like how many 
+inline skate wheels are being sold in a set? Or what is bundled within a lot?), so there is an idea in a backlog to use 
+machine vision to recognize some important aspects of a lot
 
 # Batch vulnerability scanner
 The script splits source code files into chunks (trying to split between methods), uploads these files recursively to 

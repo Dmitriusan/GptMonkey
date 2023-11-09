@@ -1,0 +1,27 @@
+spring:
+  banner:
+    location: classpath:ehawk-banner.txt
+  liquibase:
+    defaultSchema: merchandise_db
+    change-log: classpath:/db/changelog/ebay_hawk/db.changelog-master.yaml
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  datasource:
+    url: ${hawk.db.url}
+    username: ${hawk.db.username}
+    password: ${hawk.db.password}
+logging:
+  level:
+    io:
+      irw:
+        hawk: DEBUG
+    org:
+      hibernate:
+        SQL: INFO
+      springframework: INFO
+      springframework.web.client.RestTemplate: TRACE
