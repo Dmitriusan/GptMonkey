@@ -1,6 +1,7 @@
-This repository is an incubator of multiple OpenAI GPT-based utilities for working with source code. As of now, it 
-consists of:
-- [Scanner of eBay listings](#ebay-listings-scanner)
+This repository is an incubator of multiple OpenAI GPT-based utilities. Fresh developments of an LLM technology make it 
+possible to implement ideas that used to be hard or impossible for software implementation until now. As of now, the 
+repository consists of:
+- [Scanner of eBay listings](#scanner-of-ebay-listings)
 - [Batch vulnerability scanner](#batch-vulnerability-scanner)
 - [Code Generation Tool leveraging OpenAI GPT APIs](#code-generation-tool-leveraging-openai-gpt-apis)
 
