@@ -2,11 +2,11 @@
 from tqdm import tqdm
 import yaml
 
-from app import openai_util
-from app.model.completion import EvaluatedCompletion
-from app.model.context import Context
-from app.openai_util import pretty_print_conversation
-from app.prompt_generator import kickstart_prompt, decompose_prompt
+from code_generator import openai_util
+from code_generator.model.completion import EvaluatedCompletion
+from code_generator.model.context import Context
+from code_generator.openai_util import pretty_print_conversation
+from code_generator.prompt_generator import kickstart_prompt, decompose_prompt
 
 tqdm.pandas()
 

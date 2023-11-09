@@ -1,5 +1,5 @@
-from app.model.completion import EvaluatedCompletion
-from app.model.prompt import Prompt
+from code_generator.model.completion import EvaluatedCompletion
+from code_generator.model.prompt import Prompt
 
 
 class ConversationStep:

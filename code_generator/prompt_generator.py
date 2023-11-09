@@ -2,7 +2,7 @@ import json
 
 import jinja2
 
-from app.model.prompt import Prompt
+from code_generator.model.prompt import Prompt
 
 # TODO: read from project or from user input
 technology_stack = "Python 3, Jinja2"

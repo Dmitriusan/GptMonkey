@@ -2,7 +2,7 @@ import json
 
 import jinja2
 
-from app.model.prompt import Prompt
+from code_generator.model.prompt import Prompt
 
 
 def get_jinja_env():

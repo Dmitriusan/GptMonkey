@@ -1,6 +1,6 @@
 import pprint
 
-from app.model.function_call import FunctionCall
+from code_generator.model.function_call import FunctionCall
 
 
 class EvaluatedCompletion:

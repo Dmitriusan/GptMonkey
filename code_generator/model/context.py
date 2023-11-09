@@ -1,7 +1,7 @@
-from app.model.completion import EvaluatedCompletion
-from app.model.conversation import Conversation
-from app.model.conversation_step import ConversationStep
-from app.model.prompt import Prompt
+from code_generator.model.completion import EvaluatedCompletion
+from code_generator.model.conversation import Conversation
+from code_generator.model.conversation_step import ConversationStep
+from code_generator.model.prompt import Prompt
 
 
 class Context:

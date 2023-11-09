@@ -5,8 +5,8 @@ from tenacity import retry, wait_random_exponential, stop_after_attempt
 from termcolor import colored
 import pprint
 
-from app.model.conversation import Conversation
-from app.model.prompt import Prompt
+from code_generator.model.conversation import Conversation
+from code_generator.model.prompt import Prompt
 
 
 # Function to set the OpenAI API key from the environment variable

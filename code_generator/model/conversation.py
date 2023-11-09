@@ -1,6 +1,6 @@
 from typing import List
 
-from app.model.conversation_step import ConversationStep
+from code_generator.model.conversation_step import ConversationStep
 
 
 class Conversation:
