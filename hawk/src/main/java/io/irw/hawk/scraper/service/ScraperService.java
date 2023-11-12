@@ -1,7 +1,9 @@
 package io.irw.hawk.scraper.service;
 
+import io.irw.hawk.dto.merchandise.HawkFlightDto;
+import io.irw.hawk.dto.merchandise.HawkScrapeRunDto;
+import io.irw.hawk.dto.merchandise.ProductVariantEnum;
 import io.irw.hawk.scraper.exceptions.ScrapingException;
-import io.irw.hawk.scraper.model.ScrapeTargetDto;
 import io.irw.hawk.scraper.service.processors.ProductScrapeProcessor;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -19,33 +21,32 @@ import org.springframework.stereotype.Service;
 public class ScraperService {
 
   ScrapeTargetProviderService scrapeTargetProviderService;
+  HawkScrapeRunService hawkScrapeRunService;
   List<ProductScrapeProcessor> scrapeProcessors;
   private AtomicBoolean isScraping = new AtomicBoolean(false);
-
-  /**
-   * The run ID is a timestamp with current time in millis
-   */
-  private String scrapeRunId = String.valueOf(System.currentTimeMillis());
 
   public void scrape() {
     isScraping.set(true);
     while (isScraping.get()) {
-      scrapeTargetProviderService.getNextSearchTarget(scrapeRunId)
+      scrapeTargetProviderService.getNextScrapeTarget()
           .ifPresentOrElse(this::scrapePV, () -> isScraping.set(false));
     }
   }
 
   @NotNull
-  private void scrapePV(ScrapeTargetDto scrapeTargetDto) {
+  private void scrapePV(ProductVariantEnum targetProductVariant) {
+    HawkScrapeRunDto hawkScrapeRunDto = hawkScrapeRunService.startScrapeRun(targetProductVariant);
+
     List<ProductScrapeProcessor> matchingProcessors = scrapeProcessors.stream()
-        .filter(processor -> processor.supports(scrapeTargetDto))
+        .filter(processor -> processor.supports(targetProductVariant))
         .toList();
     if (matchingProcessors.size() != 1) {
-      String errorMessage = String.format("Expected 1 matching processor for item %s, found %s", scrapeTargetDto, matchingProcessors);
+      String errorMessage = String.format("Expected 1 matching processor for item %s, found %s",
+          targetProductVariant, matchingProcessors);
       log.error(errorMessage);
       throw new ScrapingException(errorMessage);
     }
-    matchingProcessors.get(0).process(scrapeTargetDto);
+    matchingProcessors.get(0).process(hawkScrapeRunDto);
   }
 
 }

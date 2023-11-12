@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="JpaBuddyIdeaProjectConfig">
+  <component name="JpaBuddyIdeaProjectConfig" reUseTableSchema="true" newRepositoryParent="org.springframework.data.jpa.repository.JpaRepository">
     <option name="defaultUnitInitialized" value="true" />
     <option name="renamerInitialized" value="true" />
+    <option name="sourceModelValue" value="Default" />
+    <option name="targetDbValue" value="a1e0f0fe-3401-45a9-ad4c-5ed554785bc8_merchandise_db" />
+    <option name="isSnapshotDb" value="false" />
+    <option name="snapshotModelValue" value="Default" />
+    <option name="updateChangeLogPath" value="hawk/src/main/resources/db/changelog/ebay_hawk/db.changelog-master.yaml" />
+    <option name="updateDbConnectionName" value="a1e0f0fe-3401-45a9-ad4c-5ed554785bc8" />
+    <option name="liquibaseAuthor" value="dmitriusan" />
+    <option name="reverseEngineeringLastDbConnectionId" value="a1e0f0fe-3401-45a9-ad4c-5ed554785bc8__ebay_hawk_dev_db_merchandise_db" />
+    <option name="reLastEntityCreationPackage" value="hawk/src/main/java/io/irw/hawk/entity" />
   </component>
 </project>

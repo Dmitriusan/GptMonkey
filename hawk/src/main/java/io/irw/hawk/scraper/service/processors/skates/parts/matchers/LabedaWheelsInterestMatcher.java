@@ -7,12 +7,8 @@ import io.irw.hawk.dto.merchandise.ProductVariantEnum;
 import io.irw.hawk.scraper.model.MerchandiseMetadataDto;
 import io.irw.hawk.scraper.model.MerchandiseReasoningDto;
 import io.irw.hawk.scraper.model.ProcessingPipelineStep;
-import io.irw.hawk.scraper.model.ScrapeTargetDto;
-import io.irw.hawk.scraper.service.extractors.PriceExtractor;
-import io.irw.hawk.scraper.service.extractors.ShippingCostExtractor;
 import io.irw.hawk.scraper.service.matchers.BaselineItemDataMatcher;
 import io.irw.hawk.scraper.service.matchers.ItemSummaryMatcher;
-import io.irw.hawk.scraper.service.matchers.ReputationMatcher;
 import io.irw.hawk.scraper.service.processors.skates.parts.extractors.WheelCountExtractor;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +57,7 @@ public class LabedaWheelsInterestMatcher implements ItemSummaryMatcher {
   }
 
   @Override
-  public boolean isApplicableTo(ScrapeTargetDto scrapeTargetDto) {
-    return scrapeTargetDto.getProductVariant().equals(ProductVariantEnum.LABEDA_80_MM_WHEELS);
+  public boolean isApplicableTo(ProductVariantEnum productVariant) {
+    return productVariant.equals(ProductVariantEnum.LABEDA_80_MM_WHEELS);
   }
 }

@@ -1,5 +1,6 @@
 package io.irw.hawk;
 
+import io.irw.hawk.scraper.service.HawkFlightService;
 import io.irw.hawk.scraper.service.ScraperService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -17,12 +18,16 @@ import org.springframework.stereotype.Component;
 public class HawkApplicationReadyEventListener implements ApplicationListener<ApplicationReadyEvent> {
 
   ScraperService scraperService;
+  HawkFlightService hawkFlightService;
+
 
   @Override
   @SneakyThrows
   public void  onApplicationEvent(ApplicationReadyEvent event) {
     log.info("Running Hawk service");
+    hawkFlightService.startFlight();
     scraperService.scrape();
+    hawkFlightService.finishFlight();
   }
 
 }

@@ -1,25 +1,19 @@
 package io.irw.hawk.dto.merchandise;
 
+import java.io.Serializable;
+import java.time.Instant;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
-/**
- * DTO for {@link io.irw.hawk.entity.Item}
- */
-/**
- * DTO for {@link io.irw.hawk.entity.Item}
- */
 @Data
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ItemDto {
+public class HawkScrapeRunDto implements Serializable {
 
   Long id;
-  String ebayId;
-  String ebayLegacyId;
-  String itemName;
-  float priceUsd;
-
+  HawkFlightDto hawkFlight;
+  Instant startedAt;
+  ProductVariantEnum productVariant;
 }

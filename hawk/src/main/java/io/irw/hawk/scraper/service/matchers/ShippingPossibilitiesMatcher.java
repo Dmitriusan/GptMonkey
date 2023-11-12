@@ -4,10 +4,10 @@ import static io.irw.hawk.scraper.model.MerchandiseVerdictType.UNPROCESSABLE;
 
 import com.ebay.buy.browse.model.ItemSummary;
 import com.ebay.buy.browse.model.ShippingOptionSummary;
+import io.irw.hawk.dto.merchandise.ProductVariantEnum;
 import io.irw.hawk.scraper.model.MerchandiseMetadataDto;
 import io.irw.hawk.scraper.model.MerchandiseReasoningDto;
 import io.irw.hawk.scraper.model.ProcessingPipelineStep;
-import io.irw.hawk.scraper.model.ScrapeTargetDto;
 import io.irw.hawk.scraper.service.extractors.ShippingCostExtractor;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +41,7 @@ public class ShippingPossibilitiesMatcher implements ItemSummaryMatcher {
   }
 
   @Override
-  public boolean isApplicableTo(ScrapeTargetDto scrapeTargetDto) {
+  public boolean isApplicableTo(ProductVariantEnum productVariant) {
     return true;
   }
 }

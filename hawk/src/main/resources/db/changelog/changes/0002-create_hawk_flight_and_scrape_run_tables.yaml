@@ -1,0 +1,69 @@
+databaseChangeLog:
+  - changeSet:
+      id: create_hawk_flight_and_scrape_run_tables
+      author: dmitriusan
+      changes:
+        - createSequence:
+            schemaName: merchandise_db
+            sequenceName: hawk_flight_seq
+            startValue: 1
+        - createSequence:
+            schemaName: merchandise_db
+            sequenceName: hawk_scrape_run_seq
+            startValue: 1
+        - createTable:
+            schemaName: merchandise_db
+            tableName: hawk_flight
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_hawk_flight
+              - column:
+                  name: started_at
+                  type: TIMESTAMPTZ
+              - column:
+                  name: state
+                  type: SMALLINT
+              - column:
+                  name: ended_at
+                  type: TIMESTAMPTZ
+        - addForeignKeyConstraint:
+            baseTableName: hawk_flight
+            baseColumnNames: state
+            referencedTableName: hawk_flight_enum
+            referencedColumnNames: id
+            constraintName: fk_hawk_flight_state
+        - createTable:
+            schemaName: merchandise_db
+            tableName: hawk_scrape_run
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_hawk_scrape_run
+              - column:
+                  name: flight_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: started_at
+                  type: TIMESTAMPTZ
+              - column:
+                  name: product_variant
+                  type: varchar(1023)
+        - addForeignKeyConstraint:
+            baseColumnNames: flight_id
+            baseTableName: hawk_scrape_run
+            baseTableSchemaName: merchandise_db
+            constraintName: FK_HAWK_SEARCH_RUN_ON_FLIGHT
+            referencedColumnNames: id
+            referencedTableName: hawk_flight
+            referencedTableSchemaName: merchandise_db

@@ -3,15 +3,10 @@ package io.irw.hawk.scraper.service.processors.skates.parts.matchers;
 import static io.irw.hawk.scraper.model.MerchandiseVerdictType.UNPROCESSABLE;
 
 import com.ebay.buy.browse.model.ItemSummary;
-import com.ebay.buy.browse.model.ShippingOptionSummary;
-import io.irw.hawk.dto.merchandise.GroupEnum;
 import io.irw.hawk.dto.merchandise.ProductVariantEnum;
 import io.irw.hawk.scraper.model.MerchandiseMetadataDto;
 import io.irw.hawk.scraper.model.MerchandiseReasoningDto;
-import io.irw.hawk.scraper.model.MerchandiseVerdictType;
 import io.irw.hawk.scraper.model.ProcessingPipelineStep;
-import io.irw.hawk.scraper.model.ScrapeTargetDto;
-import io.irw.hawk.scraper.service.extractors.ShippingCostExtractor;
 import io.irw.hawk.scraper.service.matchers.ItemSummaryMatcher;
 import io.irw.hawk.scraper.service.processors.skates.parts.extractors.WheelCountExtractor;
 import java.util.ArrayList;
@@ -43,7 +38,7 @@ public class WheelCountMatcher implements ItemSummaryMatcher {
   }
 
   @Override
-  public boolean isApplicableTo(ScrapeTargetDto scrapeTargetDto) {
-    return scrapeTargetDto.getProductVariant().equals(ProductVariantEnum.LABEDA_80_MM_WHEELS);
+  public boolean isApplicableTo(ProductVariantEnum productVariant) {
+    return productVariant.equals(ProductVariantEnum.LABEDA_80_MM_WHEELS);
   }
 }

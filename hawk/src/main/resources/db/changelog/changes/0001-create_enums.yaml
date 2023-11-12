@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: create_enums
+      author: dmitriusan
+      changes:
+        - sql:
+            sql: |
+              CREATE TYPE hawk_flight_status AS ENUM (
+                'IN_PROGRESS',
+                'FAILED',
+                'ENDED'
+              );
+        - sql:
+            sql: |
+              CREATE TYPE merchandise_verdict_type AS ENUM (
+                  'UNPROCESSABLE',
+                  'REJECT',
+                  'NOT_INTERESTING',
+                  'HUMAN_INTERVENTION_REQUIRED',
+                  'BUYING_OPPORTUNITY',
+                  'SNIPE'
+              );
+

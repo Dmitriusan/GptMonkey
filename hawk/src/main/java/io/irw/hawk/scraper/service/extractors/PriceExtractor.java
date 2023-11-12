@@ -1,9 +1,9 @@
 package io.irw.hawk.scraper.service.extractors;
 
 import com.ebay.buy.browse.model.ItemSummary;
+import io.irw.hawk.dto.merchandise.ProductVariantEnum;
 import io.irw.hawk.scraper.model.MerchandiseMetadataDto;
 import io.irw.hawk.scraper.model.ProcessingPipelineStep;
-import io.irw.hawk.scraper.model.ScrapeTargetDto;
 import io.irw.hawk.scraper.service.matchers.ShippingPossibilitiesMatcher;
 import java.util.List;
 import lombok.AccessLevel;
@@ -24,7 +24,7 @@ public class PriceExtractor implements ItemSummaryDataExtractor {
   }
 
   @Override
-  public boolean isApplicableTo(ScrapeTargetDto scrapeTargetDto) {
+  public boolean isApplicableTo(ProductVariantEnum productVariant) {
     return true;
   }
 

@@ -9,6 +9,7 @@ import com.ebay.buy.browse.api.ItemSummaryApi;
 import com.ebay.buy.browse.model.ItemSummary;
 import com.ebay.buy.browse.model.SearchPagedCollection;
 import io.irw.hawk.dto.ebay.SearchTermDto;
+import io.irw.hawk.dto.merchandise.HawkScrapeRunDto;
 import io.irw.hawk.dto.merchandise.ProductQualifierEnum;
 import io.irw.hawk.dto.merchandise.ProductVariantEnum;
 import io.irw.hawk.integration.ebay.buy.browse.ItemSummaryApiWrapper;
@@ -17,7 +18,7 @@ import io.irw.hawk.scraper.model.MerchandiseReasoningDto;
 import io.irw.hawk.scraper.model.MerchandiseMetadataDto;
 import io.irw.hawk.scraper.model.MerchandiseVerdictType;
 import io.irw.hawk.scraper.model.ProcessingPipelineStep;
-import io.irw.hawk.scraper.model.ScrapeTargetDto;
+import io.irw.hawk.scraper.model.ProcessingPipelineStepMetadataDto;
 import io.irw.hawk.scraper.service.InMemoryResultStoreService;
 import io.irw.hawk.scraper.service.extractors.ItemSummaryDataExtractor;
 import io.irw.hawk.scraper.service.matchers.ItemSummaryMatcher;
@@ -31,7 +32,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -58,19 +58,19 @@ public class LabedaWheelsScrapeProcessor implements ProductScrapeProcessor {
   InMemoryResultStoreService inMemoryResultStoreService;
 
   @Override
-  public boolean supports(ScrapeTargetDto scrapeTargetDto) {
-    ProductVariantEnum targetProductVariant = scrapeTargetDto.getProductVariant();
-    return Arrays.stream(SUPPORTED_PVS).anyMatch(pv -> pv.equals(targetProductVariant));
+  public boolean supports(ProductVariantEnum productVariant) {
+    return Arrays.stream(SUPPORTED_PVS).anyMatch(pv -> pv.equals(productVariant));
   }
 
   @Override
-  public void process(ScrapeTargetDto scrapeTargetDto) {
+  public void process(HawkScrapeRunDto hawkScrapeRunDto) {
+    ProductVariantEnum scrapeTargetDto = hawkScrapeRunDto.getProductVariant();
     for (SearchTermDto searchTermDto : generateNewLabeda80mmWheelsSearch()) {
       SearchPagedCollection result = itemSummaryApi.search(searchTermDto.getSearchParams());
 
       for (ItemSummary itemSummary : result.getItemSummaries()) {
         MerchandiseMetadataDto metadata = new MerchandiseMetadataDto();
-        metadata.setScrapeTarget(scrapeTargetDto);
+        metadata.setHawkScrapeRunDto(hawkScrapeRunDto);
 
         for (ProcessingPipelineStep pipelineStep : sortOutDependencies(processingPipelineSteps)) {
           if (pipelineStep instanceof ItemSummaryMatcher itemSummaryMatcher) {
@@ -84,6 +84,7 @@ public class LabedaWheelsScrapeProcessor implements ProductScrapeProcessor {
                 .toList();
             validateMatcherRecordFieldPresense(itemSummaryMatcher, reasoningWithoutMatcherRecord);
             updateMerchandiseVerdict(metadata);
+            storeProcessingPipelineStepMetadata(pipelineStep, metadata);
           } else if (pipelineStep instanceof ItemSummaryDataExtractor itemSummaryDataExtractor) {
             log.trace("Running extractor: {}", itemSummaryDataExtractor.getClass().getSimpleName());
             if (itemSummaryDataExtractor.isApplicableTo(scrapeTargetDto)) {
@@ -101,6 +102,13 @@ public class LabedaWheelsScrapeProcessor implements ProductScrapeProcessor {
 
   }
 
+  private static void storeProcessingPipelineStepMetadata(ProcessingPipelineStep pipelineStep, MerchandiseMetadataDto metadata) {
+    metadata.getProcessingPipelineStepMetadataDtos()
+        .add(ProcessingPipelineStepMetadataDto.builder()
+            .processingPipelineStep(pipelineStep.getClass())
+            .build());
+  }
+
   private static void validateMatcherRecordFieldPresense(ItemSummaryMatcher itemSummaryMatcher,
       List<MerchandiseReasoningDto> reasoningWithoutMatcherRecord) {
     if (! reasoningWithoutMatcherRecord.isEmpty()) {
@@ -113,7 +121,7 @@ public class LabedaWheelsScrapeProcessor implements ProductScrapeProcessor {
     MerchandiseVerdictType verdict = metadata.getReasoning().stream()
         .min(Comparator.comparing(merchandiseReasoningDto -> merchandiseReasoningDto.getVerdict().ordinal()))
         .map(MerchandiseReasoningDto::getVerdict)
-        .orElse(MerchandiseVerdictType.BUY);
+        .orElse(MerchandiseVerdictType.BUYING_OPPORTUNITY);
     metadata.setFinalVerdict(verdict);
   }
 

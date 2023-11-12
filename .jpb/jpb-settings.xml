@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DatabaseMigrationSettings" lastSelectedDirectory="db/changelog/" liquibaseFileType="YAML" mainChangeLogDir="db/changelog/" mainChangeLogName="#increment(1, 1, &quot;0000&quot;)-changelog">
+    <database-infos>
+      <database-info>
+        <dbms-id>postgres</dbms-id>
+      </database-info>
+      <database-info>
+        <option name="enabled" value="true" />
+        <dbms-id>mysql</dbms-id>
+      </database-info>
+    </database-infos>
+  </component>
+  <component name="JpaPluginProjectSettings">
+    <option name="entityNameTemplate" />
+    <option name="useLazyOnToOneAssociations" value="true" />
+    <option name="scaffoldingLanguage" value="Java" />
+  </component>
+  <component name="PersistenceUnitSettings">
+    <persistence-units>
+      <persistence-unit name="Default" defaultIncludeChangeLogFile="hawk/src/main/resources/db/changelog/db.changelog-master.yaml" defaultSearchScope="Project">
+        <packages>
+          <package value="io.irw.launcher" />
+          <package value="irw.io.hawk" />
+        </packages>
+        <entities>
+          <entity value="io.irw.hawk.entity.HawkScrapeRun" />
+          <entity value="io.irw.hawk.entity.HawkFlight" />
+        </entities>
+      </persistence-unit>
+    </persistence-units>
+  </component>
+</project>

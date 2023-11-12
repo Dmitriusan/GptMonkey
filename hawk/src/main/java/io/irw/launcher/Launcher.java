@@ -12,25 +12,23 @@ import org.springframework.context.ConfigurableApplicationContext;
 public class Launcher {
 
   public static void main(String[] args) {
-    ExecutorService executorService = Executors.newCachedThreadPool();
+    try (ExecutorService executorService = Executors.newCachedThreadPool()) {
 
-    // Start the first Spring Boot application in a separate thread
-    executorService.submit(() -> {
-      ConfigurableApplicationContext hawkAppContext = SpringApplication.run(HawkApp.class, args);
-       hawkAppContext.close();
-    });
+      // Start the first Spring Boot application in a separate thread
+      executorService.submit(() -> {
+        ConfigurableApplicationContext hawkAppContext = SpringApplication.run(HawkApp.class, args);
+        hawkAppContext.close();
+      });
 
-//    executorService.submit(() -> {
-//      ConfigurableApplicationContext chatSystemAppContext = SpringApplication.run(ChatSystemApp.class, args);
-//      chatSystemAppContext.close();
-//    });
 
-    // Shutdown the executor service gracefully when both applications are done
-    executorService.shutdown();
-    try {
-      executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
-    } catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
+      // Shutdown the executor service gracefully when both applications are done
+      executorService.shutdown();
+      try {
+        executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+      } catch (InterruptedException e) {
+        Thread.currentThread()
+            .interrupt();
+      }
     }
   }
 

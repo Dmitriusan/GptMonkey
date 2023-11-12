@@ -1,15 +1,10 @@
 package io.irw.hawk.scraper.service.matchers;
 
-import com.ebay.buy.browse.model.ItemSummary;
-import io.irw.hawk.scraper.model.MerchandiseMetadataDto;
-import io.irw.hawk.scraper.model.MerchandiseReasoningDto;
+import io.irw.hawk.dto.merchandise.ProductVariantEnum;
 import io.irw.hawk.scraper.model.ProcessingPipelineStep;
-import io.irw.hawk.scraper.model.ScrapeTargetDto;
 import io.irw.hawk.scraper.service.extractors.PieceCountExtractor;
 import io.irw.hawk.scraper.service.extractors.PriceExtractor;
 import io.irw.hawk.scraper.service.extractors.ShippingCostExtractor;
-import io.irw.hawk.scraper.service.processors.skates.parts.extractors.WheelCountExtractor;
-import io.irw.hawk.scraper.service.processors.skates.parts.matchers.WheelCountMatcher;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +29,7 @@ public class BaselineItemDataMatcher implements ItemSummaryMatcher {
   }
 
   @Override
-  public boolean isApplicableTo(ScrapeTargetDto scrapeTargetDto) {
+  public boolean isApplicableTo(ProductVariantEnum productVariant) {
     return true;
   }
 }

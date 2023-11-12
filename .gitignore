@@ -3,6 +3,7 @@ user_codechange_prompt.txt
 .env
 .idea/aws.xml
 .idea/jupyter-settings.xml
+qodana.yaml
 
 
 # Byte-compiled / optimized / DLL files

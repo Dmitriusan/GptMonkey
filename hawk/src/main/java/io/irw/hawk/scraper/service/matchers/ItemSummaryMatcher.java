@@ -1,16 +1,16 @@
 package io.irw.hawk.scraper.service.matchers;
 
 import com.ebay.buy.browse.model.ItemSummary;
+import io.irw.hawk.dto.merchandise.ProductVariantEnum;
 import io.irw.hawk.scraper.model.MerchandiseMetadataDto;
 import io.irw.hawk.scraper.model.MerchandiseReasoningDto;
 import io.irw.hawk.scraper.model.MerchandiseVerdictType;
 import io.irw.hawk.scraper.model.ProcessingPipelineStep;
-import io.irw.hawk.scraper.model.ScrapeTargetDto;
 import java.util.List;
 
 public interface ItemSummaryMatcher extends ProcessingPipelineStep {
 
-  boolean isApplicableTo(ScrapeTargetDto scrapeTargetDto);
+  boolean isApplicableTo(ProductVariantEnum productVariant);
 
   default List<MerchandiseReasoningDto> match(ItemSummary itemSummary, MerchandiseMetadataDto metadata) {
     return List.of();

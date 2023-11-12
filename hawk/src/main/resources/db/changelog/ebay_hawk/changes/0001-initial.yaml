@@ -1,4 +1,0 @@
-databaseChangeLog:
-  - changeSet:
-      id: create_initial_tables
-      author: dmitriusan

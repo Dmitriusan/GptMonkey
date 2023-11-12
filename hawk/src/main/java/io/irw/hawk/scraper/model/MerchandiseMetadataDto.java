@@ -1,12 +1,11 @@
 package io.irw.hawk.scraper.model;
 
-import static io.irw.hawk.scraper.model.MerchandiseVerdictType.BUY;
+import static io.irw.hawk.scraper.model.MerchandiseVerdictType.BUYING_OPPORTUNITY;
 
+import io.irw.hawk.dto.merchandise.HawkScrapeRunDto;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.OptionalDouble;
-import java.util.OptionalInt;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,16 +21,22 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MerchandiseMetadataDto {
 
-  ScrapeTargetDto scrapeTarget;
+  HawkScrapeRunDto hawkScrapeRunDto;
   @Default
   Optional<Integer> numberOfPieces = Optional.of(1);
   Optional<Double> pricePerPieceUsd;
   double totalPriceUsd;
   Optional<Double> minShippingCostUsd;
   @Default
-  MerchandiseVerdictType finalVerdict = BUY;
+  MerchandiseVerdictType finalVerdict = BUYING_OPPORTUNITY;
   @Default
   List<MerchandiseReasoningDto> reasoning = new ArrayList<>();
+  /**
+   * These metadata objects are stored mainly for debugging purposes (e.g. to understand what steps were actually
+   * executed and in what order)
+   */
+  @Default
+  List<ProcessingPipelineStepMetadataDto> processingPipelineStepMetadataDtos = new ArrayList<>();
 
 
 }

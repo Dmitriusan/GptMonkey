@@ -6,10 +6,10 @@ import static org.apache.commons.lang3.StringUtils.lowerCase;
 
 import com.ebay.buy.browse.model.ItemSummary;
 import io.irw.hawk.dto.merchandise.GroupEnum;
+import io.irw.hawk.dto.merchandise.ProductVariantEnum;
 import io.irw.hawk.scraper.ai.AIEnhanced;
 import io.irw.hawk.scraper.model.MerchandiseMetadataDto;
 import io.irw.hawk.scraper.model.ProcessingPipelineStep;
-import io.irw.hawk.scraper.model.ScrapeTargetDto;
 import io.irw.hawk.scraper.service.extractors.ItemSummaryDataExtractor;
 import io.irw.hawk.scraper.service.extractors.PriceExtractor;
 import java.util.List;
@@ -36,8 +36,8 @@ public class WheelCountExtractor implements ItemSummaryDataExtractor, AIEnhanced
   }
 
   @Override
-  public boolean isApplicableTo(ScrapeTargetDto scrapeTargetDto) {
-    return scrapeTargetDto.getProductVariant().getGroup().equals(GroupEnum.WHEELS);
+  public boolean isApplicableTo(ProductVariantEnum productVariant) {
+    return productVariant.getGroup().equals(GroupEnum.WHEELS);
   }
 
   @Override
