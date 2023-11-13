@@ -15,16 +15,14 @@ import lombok.experimental.FieldDefaults;
 public class HawkFlightDto implements Serializable {
 
   Long id;
-  HawkFlightStateEnum state;
+  HawkFlightStatusEnum status;
   Instant startedAt;
   Instant endedAt;
 
   @Getter
   @AllArgsConstructor
   @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-  public enum HawkFlightStateEnum {
-    IN_PROGRESS(0), FAILED(1), ENDED(2);
-
-    int id;
+  public enum HawkFlightStatusEnum {
+    IN_PROGRESS, FAILED, ENDED;
   }
 }

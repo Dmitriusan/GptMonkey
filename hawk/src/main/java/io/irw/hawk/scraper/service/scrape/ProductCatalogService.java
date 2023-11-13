@@ -1,4 +1,4 @@
-package io.irw.hawk.scraper.service;
+package io.irw.hawk.scraper.service.scrape;
 
 import io.irw.hawk.dto.merchandise.ProductVariantEnum;
 import java.util.List;

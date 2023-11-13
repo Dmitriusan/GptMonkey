@@ -1,7 +1,10 @@
 package io.irw.hawk.entity;
 
+import io.irw.hawk.scraper.model.MerchandiseVerdictType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -36,15 +39,15 @@ public class EbayHighlight {
   @ManyToOne
   @JoinColumn(name = "run_id")
   @EqualsAndHashCode.Include
-  HawkScrapeRun runId;
+  HawkScrapeRun run;
 
   @ManyToOne
   @JoinColumn(name = "ebay_finding_id")
   @EqualsAndHashCode.Include
   EbayFinding ebayFinding;
 
-  
-
-
+  @Enumerated(EnumType.STRING)
+  @Column(name = "final_verdict", columnDefinition = "merchandise_verdict_type")
+  MerchandiseVerdictType finalVerdict;
 
 }

@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: create_enums
+      id: 0001-create_enums
       author: dmitriusan
       changes:
         - sql:
@@ -20,4 +20,19 @@ databaseChangeLog:
                   'BUYING_OPPORTUNITY',
                   'SNIPE'
               );
+        - sql:
+            sql: |
+              CREATE TYPE ebay_listing_status AS ENUM (
+                'ACTIVE',
+                'BOUGHT_THROUGH_AUCTION',
+                'BOUGHT_THROUGH_BUY_IT_NOW',
+                'CANCELLED'
+              );
+        - sql:
+            sql: |
+              CREATE TYPE ebay_listing_type AS ENUM (
+                'AUCTION',
+                'BUY_IT_NOW'
+              ); 
+              
 

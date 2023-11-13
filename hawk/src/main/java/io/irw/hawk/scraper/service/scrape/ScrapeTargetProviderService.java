@@ -1,7 +1,5 @@
-package io.irw.hawk.scraper.service;
+package io.irw.hawk.scraper.service.scrape;
 
-import io.irw.hawk.dto.merchandise.HawkFlightDto;
-import io.irw.hawk.dto.merchandise.HawkScrapeRunDto;
 import io.irw.hawk.dto.merchandise.ProductVariantEnum;
 import java.util.Optional;
 import java.util.Queue;

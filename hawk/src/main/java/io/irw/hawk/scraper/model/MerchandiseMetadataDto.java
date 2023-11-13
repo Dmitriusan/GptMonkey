@@ -3,6 +3,7 @@ package io.irw.hawk.scraper.model;
 import static io.irw.hawk.scraper.model.MerchandiseVerdictType.BUYING_OPPORTUNITY;
 
 import io.irw.hawk.dto.merchandise.HawkScrapeRunDto;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,9 +25,9 @@ public class MerchandiseMetadataDto {
   HawkScrapeRunDto hawkScrapeRunDto;
   @Default
   Optional<Integer> numberOfPieces = Optional.of(1);
-  Optional<Double> pricePerPieceUsd;
-  double totalPriceUsd;
-  Optional<Double> minShippingCostUsd;
+  Optional<BigDecimal> pricePerPieceUsd;
+  BigDecimal totalPriceUsd;
+  Optional<BigDecimal> minShippingCostUsd;
   @Default
   MerchandiseVerdictType finalVerdict = BUYING_OPPORTUNITY;
   @Default

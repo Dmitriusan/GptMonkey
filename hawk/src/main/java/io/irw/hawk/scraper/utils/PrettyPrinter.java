@@ -17,7 +17,7 @@ public class PrettyPrinter {
 
   public void prettyPrint(ItemSummary itemSummary, MerchandiseMetadataDto metadataDto) {
     String priceWithShippingCost = metadataDto.getMinShippingCostUsd()
-        .map(amount -> amount + metadataDto.getTotalPriceUsd())
+        .map(amount -> amount.add(metadataDto.getTotalPriceUsd()))
         .map(amount -> String.format("%.2f", amount))
         .orElse("NO SHIPPING COST");
     String numberOfPieces = metadataDto.getNumberOfPieces()

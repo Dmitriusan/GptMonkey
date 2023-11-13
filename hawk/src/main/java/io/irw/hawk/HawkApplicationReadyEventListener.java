@@ -1,7 +1,7 @@
 package io.irw.hawk;
 
-import io.irw.hawk.scraper.service.HawkFlightService;
-import io.irw.hawk.scraper.service.ScraperService;
+import io.irw.hawk.scraper.service.domain.HawkFlightService;
+import io.irw.hawk.scraper.service.scrape.ScraperService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;

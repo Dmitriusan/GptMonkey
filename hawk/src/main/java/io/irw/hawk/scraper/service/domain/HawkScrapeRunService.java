@@ -1,9 +1,10 @@
-package io.irw.hawk.scraper.service;
+package io.irw.hawk.scraper.service.domain;
 
 import io.irw.hawk.dto.merchandise.HawkScrapeRunDto;
 import io.irw.hawk.dto.merchandise.ProductVariantEnum;
 import io.irw.hawk.mapper.HawkScrapeRunMapper;
 import io.irw.hawk.repository.HawkScrapeRunRepository;
+import io.irw.hawk.scraper.service.domain.HawkFlightService;
 import java.time.Instant;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

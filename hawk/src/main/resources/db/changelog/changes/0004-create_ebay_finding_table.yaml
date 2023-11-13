@@ -1,0 +1,88 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0004-create_ebay_finding_table
+      author: dmitriusan
+      changes:
+        # Create ebay_finding table
+        - createSequence:
+            schemaName: merchandise_db
+            sequenceName: ebay_finding_seq
+            startValue: 1
+        - createTable:
+            schemaName: merchandise_db
+            tableName: ebay_finding
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_ebay_finding
+              - column:
+                  name: ebay_id_str
+                  type: VARCHAR
+                  constraints:
+                    nullable: false
+              - column:
+                  name: legacy_ebay_id_str
+                  type: VARCHAR
+              - column:
+                  name: item_title
+                  type: VARCHAR
+                  constraints:
+                    nullable: false
+              - column:
+                  name: item_description
+                  type: VARCHAR
+              - column:
+                  name: current_auction_price_usd
+                  type: NUMERIC(8,2)
+              - column:
+                  name: final_price_usd
+                  type: NUMERIC(8,2)
+              - column:
+                  name: min_shipping_usd
+                  type: NUMERIC(8,2)
+              - column:
+                  name: buy_it_now_price_usd
+                  type: NUMERIC(8,2)
+              - column:
+                  name: bid_count
+                  type: INTEGER
+              - column:
+                  name: captured_at
+                  type: TIMESTAMPTZ
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ends_on
+                  type: TIMESTAMPTZ
+                  constraints:
+                    nullable: false
+              - column:
+                  name: listing_type
+                  type: ebay_listing_type
+                  constraints:
+                    nullable: false
+              - column:
+                  name: listing_status
+                  type: ebay_listing_status
+                  constraints:
+                    nullable: false
+              - column:
+                  name: seller_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_ebay_finding_seller_id
+                    references: ebay_seller(id)
+
+        # Adding foreign key constraints
+        - addForeignKeyConstraint:
+            baseColumnNames: seller_id
+            baseTableName: ebay_finding
+            baseTableSchemaName: merchandise_db
+            constraintName: FK_EBAY_FINDING_ON_EBAY_SELLER
+            referencedColumnNames: id
+            referencedTableName: ebay_seller
+            referencedTableSchemaName: merchandise_db

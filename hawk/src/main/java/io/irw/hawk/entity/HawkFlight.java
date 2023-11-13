@@ -1,8 +1,11 @@
 package io.irw.hawk.entity;
 
-import io.irw.hawk.dto.merchandise.HawkFlightDto.HawkFlightStateEnum;
+import io.hypersistence.utils.hibernate.type.basic.PostgreSQLEnumType;
+import io.irw.hawk.dto.merchandise.HawkFlightDto.HawkFlightStatusEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -14,6 +17,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.ColumnTransformer;
+import org.hibernate.annotations.Type;
 
 @Getter
 @Setter
@@ -36,8 +41,10 @@ public class HawkFlight {
   @EqualsAndHashCode.Include
   Instant startedAt;
 
-  @Column(name = "state", nullable = false)
-  HawkFlightStateEnum state;
+  @Enumerated(EnumType.STRING)
+  @Column(name = "status", nullable = false, columnDefinition = "hawk_flight_status")
+  @Type(PostgreSQLEnumType.class)
+  HawkFlightStatusEnum status;
 
   @Column(name = "ended_at")
   Instant endedAt;

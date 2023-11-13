@@ -10,6 +10,7 @@ import io.irw.hawk.scraper.model.ProcessingPipelineStep;
 import io.irw.hawk.scraper.service.matchers.BaselineItemDataMatcher;
 import io.irw.hawk.scraper.service.matchers.ItemSummaryMatcher;
 import io.irw.hawk.scraper.service.processors.skates.parts.extractors.WheelCountExtractor;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -24,9 +25,9 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class LabedaWheelsInterestMatcher implements ItemSummaryMatcher {
 
-  static double DESIRED_PRICE_PER_WHEEL = 5;
-  static double DESIRED_MIN_WHEEL_COUNT = 4;
-  static double MEEST_SHIPPING_AND_HANDLING_PER_PIECE = 4;
+  static BigDecimal DESIRED_PRICE_PER_WHEEL = BigDecimal.valueOf(5);
+  static int DESIRED_MIN_WHEEL_COUNT = 4;
+  static BigDecimal MEEST_SHIPPING_AND_HANDLING_PER_SHIPPING = BigDecimal.valueOf(4);
 
   @Override
   public List<Class<? extends ProcessingPipelineStep>> dependsOn() {
@@ -40,14 +41,16 @@ public class LabedaWheelsInterestMatcher implements ItemSummaryMatcher {
       return result;
     }
 
-    double pricePerPieceUsd = metadata.getPricePerPieceUsd().get();
+    BigDecimal pricePerPieceUsd = metadata.getPricePerPieceUsd().get();
     int numberOfPieces = metadata.getNumberOfPieces().get();
-    if (pricePerPieceUsd > DESIRED_PRICE_PER_WHEEL) {
+    if (pricePerPieceUsd.compareTo(DESIRED_PRICE_PER_WHEEL) > 0) {
       result.add(newReasoningDto(String.format("Too pricey: %s$ per wheel > %s$", pricePerPieceUsd,
           DESIRED_PRICE_PER_WHEEL), NOT_INTERESTING));
     } else if (numberOfPieces < DESIRED_MIN_WHEEL_COUNT) {
-      double priceBenefit = (numberOfPieces * DESIRED_PRICE_PER_WHEEL) - (numberOfPieces * pricePerPieceUsd);
-      if (priceBenefit < MEEST_SHIPPING_AND_HANDLING_PER_PIECE) {
+      BigDecimal priceBenefit = BigDecimal.valueOf(numberOfPieces)
+          .multiply(DESIRED_PRICE_PER_WHEEL)
+          .subtract((BigDecimal.valueOf(numberOfPieces).multiply(pricePerPieceUsd)));
+      if (priceBenefit.compareTo(MEEST_SHIPPING_AND_HANDLING_PER_SHIPPING) < 0) {
         result.add(newReasoningDto(
             String.format("Items are cheap, but too small quantity for Meest shipping&handling: %s$ price "
                 + "benefit", priceBenefit), NOT_INTERESTING));

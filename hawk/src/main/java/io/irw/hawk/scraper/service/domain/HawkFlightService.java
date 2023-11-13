@@ -1,10 +1,10 @@
-package io.irw.hawk.scraper.service;
+package io.irw.hawk.scraper.service.domain;
 
-import static io.irw.hawk.dto.merchandise.HawkFlightDto.HawkFlightStateEnum.FAILED;
-import static io.irw.hawk.dto.merchandise.HawkFlightDto.HawkFlightStateEnum.IN_PROGRESS;
+import static io.irw.hawk.dto.merchandise.HawkFlightDto.HawkFlightStatusEnum.FAILED;
+import static io.irw.hawk.dto.merchandise.HawkFlightDto.HawkFlightStatusEnum.IN_PROGRESS;
 
 import io.irw.hawk.dto.merchandise.HawkFlightDto;
-import io.irw.hawk.dto.merchandise.HawkFlightDto.HawkFlightStateEnum;
+import io.irw.hawk.dto.merchandise.HawkFlightDto.HawkFlightStatusEnum;
 import io.irw.hawk.entity.HawkFlight;
 import io.irw.hawk.mapper.HawkFlightMapper;
 import io.irw.hawk.repository.HawkFlightRepository;
@@ -33,7 +33,7 @@ public class HawkFlightService {
     forceClosePreviousUnfinishedFlights();
 
     HawkFlightDto hawkFlightDto = HawkFlightDto.builder()
-        .state(IN_PROGRESS)
+        .status(IN_PROGRESS)
         .startedAt(Instant.now())
         .build();
     hawkFlightRepository.save(hawkFlightMapper.toEntity(hawkFlightDto));
@@ -47,7 +47,7 @@ public class HawkFlightService {
     }
 
     allUnfinishedPreviousFlights.forEach(flight -> {
-      flight.setState(FAILED);
+      flight.setStatus(FAILED);
       flight.setEndedAt(Instant.now());
     });
     hawkFlightRepository.saveAll(allUnfinishedPreviousFlights);
@@ -55,13 +55,13 @@ public class HawkFlightService {
 
   @Transactional(readOnly = true)
   public HawkFlightDto getCurrentFlight() {
-    return hawkFlightMapper.toDto(hawkFlightRepository.findOneByState(IN_PROGRESS));
+    return hawkFlightMapper.toDto(hawkFlightRepository.findOneByStatus(IN_PROGRESS));
   }
 
   @Transactional
   public void finishFlight() {
-    HawkFlight inProgressFlight = hawkFlightRepository.findOneByState(IN_PROGRESS);
-    inProgressFlight.setState(HawkFlightStateEnum.ENDED);
+    HawkFlight inProgressFlight = hawkFlightRepository.findOneByStatus(IN_PROGRESS);
+    inProgressFlight.setStatus(HawkFlightStatusEnum.ENDED);
     inProgressFlight.setEndedAt(Instant.now());
     hawkFlightRepository.save(inProgressFlight);
     log.info("Finishing Hawk flight");

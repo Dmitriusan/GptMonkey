@@ -3,6 +3,7 @@ package io.irw.hawk.scraper.service.extractors;
 import com.ebay.buy.browse.model.ItemSummary;
 import io.irw.hawk.dto.merchandise.ProductVariantEnum;
 import io.irw.hawk.scraper.model.MerchandiseMetadataDto;
+import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.Optional;
 import lombok.AccessLevel;
@@ -24,12 +25,13 @@ public class ShippingCostExtractor implements ItemSummaryDataExtractor {
 
   @Override
   public void extractDataFromItemSummary(ItemSummary itemSummary, MerchandiseMetadataDto metadata) {
-    Optional<Double> minShippingCost = Optional.ofNullable(itemSummary.getShippingOptions())
+    Optional<BigDecimal> minShippingCost = Optional.ofNullable(itemSummary.getShippingOptions())
         .flatMap(shippingOptions -> shippingOptions.stream()
           .filter(
               so -> so.getShippingCost() != null) // Looks like shipping cost from Canada is CALCULATED/null
           .map(shippingOptionSummary -> Double.valueOf(shippingOptionSummary.getShippingCost().getValue()))
-          .min(Comparator.naturalOrder()));
+          .min(Comparator.naturalOrder()))
+          .map(BigDecimal::valueOf);
     metadata.setMinShippingCostUsd(minShippingCost);
   }
 

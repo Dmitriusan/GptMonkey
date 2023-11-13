@@ -1,9 +1,9 @@
-package io.irw.hawk.scraper.service;
+package io.irw.hawk.scraper.service.scrape;
 
-import io.irw.hawk.dto.merchandise.HawkFlightDto;
 import io.irw.hawk.dto.merchandise.HawkScrapeRunDto;
 import io.irw.hawk.dto.merchandise.ProductVariantEnum;
 import io.irw.hawk.scraper.exceptions.ScrapingException;
+import io.irw.hawk.scraper.service.domain.HawkScrapeRunService;
 import io.irw.hawk.scraper.service.processors.ProductScrapeProcessor;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;

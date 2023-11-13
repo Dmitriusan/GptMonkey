@@ -1,15 +1,11 @@
 databaseChangeLog:
   - changeSet:
-      id: create_hawk_flight_and_scrape_run_tables
+      id: 0002-create_hawk_flight_and_scrape_run_tables
       author: dmitriusan
       changes:
         - createSequence:
             schemaName: merchandise_db
             sequenceName: hawk_flight_seq
-            startValue: 1
-        - createSequence:
-            schemaName: merchandise_db
-            sequenceName: hawk_scrape_run_seq
             startValue: 1
         - createTable:
             schemaName: merchandise_db
@@ -26,17 +22,16 @@ databaseChangeLog:
                   name: started_at
                   type: TIMESTAMPTZ
               - column:
-                  name: state
-                  type: SMALLINT
+                  name: status
+                  type: hawk_flight_status
               - column:
                   name: ended_at
                   type: TIMESTAMPTZ
-        - addForeignKeyConstraint:
-            baseTableName: hawk_flight
-            baseColumnNames: state
-            referencedTableName: hawk_flight_enum
-            referencedColumnNames: id
-            constraintName: fk_hawk_flight_state
+
+        - createSequence:
+            schemaName: merchandise_db
+            sequenceName: hawk_scrape_run_seq
+            startValue: 1
         - createTable:
             schemaName: merchandise_db
             tableName: hawk_scrape_run

@@ -1,0 +1,33 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0003-create_ebay_seller_table
+      author: dmitriusan
+      changes:
+        # Create ebay_seller table
+        - createSequence:
+            schemaName: merchandise_db
+            sequenceName: ebay_seller_seq
+            startValue: 1
+        - createTable:
+            schemaName: merchandise_db
+            tableName: ebay_seller
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_ebay_seller
+              - column:
+                  name: ebay_id_str
+                  type: VARCHAR
+              - column:
+                  name: registered_on
+                  type: TIMESTAMPTZ
+              - column:
+                  name: reputation_percentage
+                  type: FLOAT
+              - column:
+                  name: feedback_score
+                  type: INTEGER

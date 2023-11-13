@@ -4,7 +4,7 @@ import io.irw.hawk.dto.merchandise.ProductVariantEnum;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
-@Converter
+@Converter(autoApply = true)
 public class ProductVariantEnumConverter implements AttributeConverter<ProductVariantEnum, String> {
 
   @Override

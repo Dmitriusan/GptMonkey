@@ -1,0 +1,56 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0005-create_ebay_highlight_table
+      author: dmitriusan
+      changes:
+        # Create ebay_highlight table
+        - createSequence:
+            schemaName: merchandise_db
+            sequenceName: ebay_highlight_seq
+            startValue: 1
+        - createTable:
+            schemaName: merchandise_db
+            tableName: ebay_highlight
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_ebay_highlight
+              - column:
+                  name: run_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_ebay_highlight_run_id
+                    references: hawk_scrape_run(id)
+              - column:
+                  name: ebay_finding_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_ebay_highlight_ebay_finding_id
+                    references: ebay_finding(id)
+              - column:
+                  name: final_verdict
+                  type: merchandise_verdict_type
+
+        # Adding foreign key constraints
+        - addForeignKeyConstraint:
+            baseColumnNames: run_id
+            baseTableName: ebay_highlight
+            baseTableSchemaName: merchandise_db
+            constraintName: FK_EBAY_HIGHLIGHT_ON_SCRAPE_RUN
+            referencedColumnNames: id
+            referencedTableName: hawk_scrape_run
+            referencedTableSchemaName: merchandise_db
+        - addForeignKeyConstraint:
+            baseColumnNames: ebay_finding_id
+            baseTableName: ebay_highlight
+            baseTableSchemaName: merchandise_db
+            constraintName: FK_EBAY_HIGHLIGHT_ON_EBAY_FINDING
+            referencedColumnNames: id
+            referencedTableName: ebay_finding
+            referencedTableSchemaName: merchandise_db
