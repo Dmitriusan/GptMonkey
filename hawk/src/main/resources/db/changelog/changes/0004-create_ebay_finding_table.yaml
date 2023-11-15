@@ -24,9 +24,13 @@ databaseChangeLog:
                   type: VARCHAR
                   constraints:
                     nullable: false
+                    unique: true
               - column:
                   name: legacy_ebay_id_str
                   type: VARCHAR
+                  constraints:
+                    nullable: false
+                    unique: true
               - column:
                   name: item_title
                   type: VARCHAR

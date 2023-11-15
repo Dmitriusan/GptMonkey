@@ -1,6 +1,6 @@
 package io.irw.hawk.scraper.model;
 
-import static io.irw.hawk.scraper.model.ProcessingPipelineStep.sortOutDependencies;
+import static io.irw.hawk.scraper.model.ProcessingPipelineStep.linearExecutionGraphByDependencies;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
@@ -14,7 +14,7 @@ class ProcessingPipelineStepTest {
     ProcessingPipelineStep[] processingPipelineSteps = {new PipelineStepA(), new PipelineStepB(), new PipelineStepC(),
         new PipelineStepD(), new PipelineStepE(), new PipelineStepF()};
 
-    List<ProcessingPipelineStep> sortedDependencies = sortOutDependencies(processingPipelineSteps);
+    List<ProcessingPipelineStep> sortedDependencies = linearExecutionGraphByDependencies(processingPipelineSteps);
     assertThat(sortedDependencies).hasSize(processingPipelineSteps.length);
     assertThat(sortedDependencies.stream()
         .map(processingPipelineStep -> processingPipelineStep.getClass())
@@ -28,7 +28,7 @@ class ProcessingPipelineStepTest {
     ProcessingPipelineStep[] processingPipelineSteps = {new PipelineStepA(), new PipelineStepB(), new PipelineStepC(),
         new PipelineStepD(), new PipelineStepE(), new PipelineStepF(), new PipelineStepG()};
 
-    List<ProcessingPipelineStep> sortedDependencies = sortOutDependencies(processingPipelineSteps);
+    List<ProcessingPipelineStep> sortedDependencies = linearExecutionGraphByDependencies(processingPipelineSteps);
     assertThat(sortedDependencies).hasSize(processingPipelineSteps.length);
     assertThat(sortedDependencies.stream()
         .map(processingPipelineStep -> processingPipelineStep.getClass())
@@ -43,7 +43,7 @@ class ProcessingPipelineStepTest {
         new PipelineStepC(), new PipelineStepD(), new PipelineStepE(), new PipelineStepF(), new PipelineStepH()};
 
     assertThatExceptionOfType(IllegalStateException.class)
-        .isThrownBy(() -> sortOutDependencies(processingPipelineSteps));
+        .isThrownBy(() -> linearExecutionGraphByDependencies(processingPipelineSteps));
   }
 
   @Test
@@ -52,7 +52,7 @@ class ProcessingPipelineStepTest {
         new PipelineStepMutualDependsOnB()};
 
     assertThatExceptionOfType(IllegalStateException.class)
-        .isThrownBy(() -> sortOutDependencies(processingPipelineSteps));
+        .isThrownBy(() -> linearExecutionGraphByDependencies(processingPipelineSteps));
   }
 
   @Test
@@ -61,7 +61,7 @@ class ProcessingPipelineStepTest {
         new PipelineStepMutualDependencyForB()};
 
     assertThatExceptionOfType(IllegalStateException.class)
-        .isThrownBy(() -> sortOutDependencies(processingPipelineSteps));
+        .isThrownBy(() -> linearExecutionGraphByDependencies(processingPipelineSteps));
   }
 
   private class PipelineStepA implements ProcessingPipelineStep {

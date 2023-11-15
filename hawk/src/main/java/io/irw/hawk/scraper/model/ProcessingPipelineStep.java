@@ -32,7 +32,7 @@ public interface ProcessingPipelineStep extends Comparable<ProcessingPipelineSte
             .getName());
   }
 
-  static List<ProcessingPipelineStep> sortOutDependencies(ProcessingPipelineStep... steps) {
+  static List<ProcessingPipelineStep> linearExecutionGraphByDependencies(ProcessingPipelineStep... steps) {
     DirectedPseudograph<ProcessingPipelineStep, DefaultEdge> dependencyGraph = new DirectedPseudograph<>(
         DefaultEdge.class);
     Map<Class<? extends ProcessingPipelineStep>, ProcessingPipelineStep> classToStep = Arrays.stream(steps)

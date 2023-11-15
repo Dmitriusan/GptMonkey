@@ -11,7 +11,6 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SearchTermDto {
 
-  long id;
   ItemSummarySearchParameterDto searchParams;
 //  String name;
 //  String query;

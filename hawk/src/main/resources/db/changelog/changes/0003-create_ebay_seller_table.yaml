@@ -22,6 +22,9 @@ databaseChangeLog:
               - column:
                   name: ebay_id_str
                   type: VARCHAR
+                  constraints:
+                    nullable: false
+                    unique: true
               - column:
                   name: registered_on
                   type: TIMESTAMPTZ

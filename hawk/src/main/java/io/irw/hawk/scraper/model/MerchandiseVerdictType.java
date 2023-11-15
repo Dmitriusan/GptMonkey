@@ -18,6 +18,11 @@ public enum MerchandiseVerdictType {
   UNPROCESSABLE,
 
   /**
+   * Item is already present at the DB
+   */
+  ITEM_ALREADY_PERSISTED,
+
+  /**
    * Hard reject - wrong match, or issues like reputation
    */
   REJECT,

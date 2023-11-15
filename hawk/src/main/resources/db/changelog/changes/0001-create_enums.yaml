@@ -14,6 +14,7 @@ databaseChangeLog:
             sql: |
               CREATE TYPE merchandise_verdict_type AS ENUM (
                   'UNPROCESSABLE',
+                  'ITEM_ALREADY_PERSISTED',
                   'REJECT',
                   'NOT_INTERESTING',
                   'HUMAN_INTERVENTION_REQUIRED',
