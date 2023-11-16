@@ -1,7 +1,11 @@
 package io.irw.hawk.scraper.service.matchers;
 
+import com.ebay.buy.browse.model.ItemSummary;
 import io.irw.hawk.dto.merchandise.ProductVariantEnum;
+import io.irw.hawk.scraper.model.MerchandiseMetadataDto;
+import io.irw.hawk.scraper.model.MerchandiseReasoningDto;
 import io.irw.hawk.scraper.model.ProcessingPipelineStep;
+import io.irw.hawk.scraper.service.extractors.ListingTypeExtractor;
 import io.irw.hawk.scraper.service.extractors.PieceCountExtractor;
 import io.irw.hawk.scraper.service.extractors.PriceExtractor;
 import io.irw.hawk.scraper.service.extractors.ShippingCostExtractor;
@@ -24,12 +28,17 @@ public class BaselineItemDataMatcher implements ItemSummaryMatcher {
 
   @Override
   public List<Class<? extends ProcessingPipelineStep>> dependsOn() {
-    return List.of(ReputationMatcher.class, PriceExtractor.class, PieceCountExtractor.class,
+    return List.of(ListingTypeExtractor.class, ReputationMatcher.class, PriceExtractor.class, PieceCountExtractor.class,
         ShippingCostExtractor.class, ShippingPossibilitiesMatcher.class);
   }
 
   @Override
   public boolean isApplicableTo(ProductVariantEnum productVariant) {
     return true;
+  }
+
+  @Override
+  public List<MerchandiseReasoningDto> match(ItemSummary itemSummary, MerchandiseMetadataDto metadata) {
+    return List.of();
   }
 }

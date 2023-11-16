@@ -28,7 +28,7 @@ import org.springframework.stereotype.Service;
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
-public class WheelCountExtractor implements ItemSummaryDataExtractor, AIEnhanced {
+public class WheelCountExtractor implements ItemSummaryDataExtractor {
 
   @Override
   public List<Class<? extends ProcessingPipelineStep>> dependencyFor() {
@@ -55,7 +55,7 @@ public class WheelCountExtractor implements ItemSummaryDataExtractor, AIEnhanced
 
     // TODO: default pack by wheel size (4/8 for 80mm)
     // TODO: match by price
-    metadata.setNumberOfPieces(numberOfWheels);
+    metadata.getEbayFindingDto().setNumberOfPieces(numberOfWheels);
   }
 
   protected static Optional<Integer> extractNumberOfWheelsFromText(String titleWithMixedCase, String shortDescriptionWithMixedCase) {

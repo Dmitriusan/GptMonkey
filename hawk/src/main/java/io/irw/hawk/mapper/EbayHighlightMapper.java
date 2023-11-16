@@ -31,7 +31,4 @@ public interface EbayHighlightMapper {
 
   EbayHighlightDto toDto(EbayHighlight ebayHighlight);
 
-  @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-  EbayHighlight partialUpdate(
-      EbayHighlightDto ebayHighlightDto, @MappingTarget EbayHighlight ebayHighlight);
 }

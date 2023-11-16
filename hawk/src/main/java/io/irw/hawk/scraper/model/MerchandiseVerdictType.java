@@ -38,17 +38,28 @@ public enum MerchandiseVerdictType {
   HUMAN_INTERVENTION_REQUIRED,
 
   /**
-   * Good match, but needs manual review
+   * Good match to BUY_IT_NOW, but needs a manual review
    */
   BUYING_OPPORTUNITY,
 
   /**
+   * Good match for auto sniping, but needs manual review
+   */
+  SNIPING_OPPORTUNITY,
+
+  /**
+   * Definitely good match to BUY_IT_NOW
+   */
+  BUY_IT_NOW_RECOMMENDED,
+
+  /**
    * Definitely good match, auto-add to sniping list
    */
-  SNIPE;
+  SNIPE_RECOMMENDED;
 
-
-  private static final List<MerchandiseVerdictType> BUYABLE_TYPES = Arrays.asList(SNIPE, BUYING_OPPORTUNITY,
+  private static final List<MerchandiseVerdictType> BUYABLE_TYPES = Arrays.asList(
+      SNIPE_RECOMMENDED, BUY_IT_NOW_RECOMMENDED,
+      BUYING_OPPORTUNITY, SNIPING_OPPORTUNITY,
       HUMAN_INTERVENTION_REQUIRED);
 
   public boolean isBuyable() {

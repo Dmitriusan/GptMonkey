@@ -12,13 +12,7 @@ public interface ItemSummaryMatcher extends ProcessingPipelineStep {
 
   boolean isApplicableTo(ProductVariantEnum productVariant);
 
-  default List<MerchandiseReasoningDto> match(ItemSummary itemSummary, MerchandiseMetadataDto metadata) {
-    return List.of();
-  }
-
-  default List<MerchandiseReasoningDto> postProcess(ItemSummary itemSummary) {
-    return List.of();
-  }
+  List<MerchandiseReasoningDto> match(ItemSummary itemSummary, MerchandiseMetadataDto metadata);
 
   default MerchandiseReasoningDto newReasoningDto(String reason, MerchandiseVerdictType verdict) {
     return MerchandiseReasoningDto.builder()

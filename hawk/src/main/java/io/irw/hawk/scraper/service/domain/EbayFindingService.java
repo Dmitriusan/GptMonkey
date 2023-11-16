@@ -1,5 +1,6 @@
 package io.irw.hawk.scraper.service.domain;
 
+import com.ebay.buy.browse.model.ItemSummary;
 import io.irw.hawk.dto.ebay.EbayFindingDto;
 import io.irw.hawk.dto.ebay.EbaySellerDto;
 import io.irw.hawk.dto.merchandise.HawkScrapeRunDto;
@@ -10,6 +11,7 @@ import io.irw.hawk.mapper.EbayFindingMapper;
 import io.irw.hawk.mapper.HawkScrapeRunMapper;
 import io.irw.hawk.repository.EbayFindingRepository;
 import io.irw.hawk.repository.HawkScrapeRunRepository;
+import io.irw.hawk.scraper.model.MerchandiseMetadataDto;
 import java.time.Instant;
 import java.util.Optional;
 import lombok.AccessLevel;
@@ -39,7 +41,7 @@ public class EbayFindingService {
         .map(ebayFindingMapper::toDto);
   }
 
-  @Transactional
+/*  @Transactional
   public EbayFindingDto upsertFinding(EbayFindingDto ebayFindingDto) {
     return ebayFindingRepository.findByEbayIdStr(ebayFindingDto.getEbayIdStr())
         .map(existingFinding -> {
@@ -48,7 +50,11 @@ public class EbayFindingService {
           return ebayFindingMapper.toDto(updatedFinding);
         })
         .orElseGet(() -> saveFinding(ebayFindingDto));
+  }*/
+
+
+  @Transactional
+  public void updateFinding(EbayFindingDto ebayFindingDto) {
+    // TODO: implement
   }
-
-
 }

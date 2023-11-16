@@ -7,6 +7,7 @@ import io.irw.hawk.dto.merchandise.ProductVariantEnum;
 import io.irw.hawk.scraper.model.MerchandiseMetadataDto;
 import io.irw.hawk.scraper.model.MerchandiseReasoningDto;
 import io.irw.hawk.scraper.model.ProcessingPipelineStep;
+import io.irw.hawk.scraper.service.matchers.BaselineItemDataMatcher;
 import io.irw.hawk.scraper.service.matchers.ItemSummaryMatcher;
 import io.irw.hawk.scraper.service.processors.skates.parts.extractors.WheelCountExtractor;
 import java.util.ArrayList;
@@ -29,9 +30,14 @@ public class WheelCountMatcher implements ItemSummaryMatcher {
   }
 
   @Override
+  public List<Class<? extends ProcessingPipelineStep>> dependencyFor() {
+    return List.of(BaselineItemDataMatcher.class);
+  }
+
+  @Override
   public List<MerchandiseReasoningDto> match(ItemSummary itemSummary, MerchandiseMetadataDto metadata) {
     List<MerchandiseReasoningDto> result = new ArrayList<>();
-    if (metadata.getNumberOfPieces().isEmpty()) {
+    if (metadata.getEbayFindingDto().getNumberOfPieces().isEmpty()) {
       result.add(newReasoningDto("Could not determine the number of wheels", UNPROCESSABLE));
     }
     return result;

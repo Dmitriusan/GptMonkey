@@ -19,7 +19,9 @@ databaseChangeLog:
                   'NOT_INTERESTING',
                   'HUMAN_INTERVENTION_REQUIRED',
                   'BUYING_OPPORTUNITY',
-                  'SNIPE'
+                  'SNIPING_OPPORTUNITY',
+                  'BUY_IT_NOW_RECOMMENDED',
+                  'SNIPE_RECOMMENDED'
               );
         - sql:
             sql: |
@@ -33,7 +35,7 @@ databaseChangeLog:
             sql: |
               CREATE TYPE ebay_listing_type AS ENUM (
                 'AUCTION',
-                'BUY_IT_NOW'
+                'FIXED_PRICE'
               ); 
               
 

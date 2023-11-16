@@ -32,7 +32,7 @@ public class ShippingCostExtractor implements ItemSummaryDataExtractor {
           .map(shippingOptionSummary -> Double.valueOf(shippingOptionSummary.getShippingCost().getValue()))
           .min(Comparator.naturalOrder()))
           .map(BigDecimal::valueOf);
-    metadata.setMinShippingCostUsd(minShippingCost);
+    metadata.getEbayFindingDto().setMinShippingCostUsd(minShippingCost);
   }
 
 }

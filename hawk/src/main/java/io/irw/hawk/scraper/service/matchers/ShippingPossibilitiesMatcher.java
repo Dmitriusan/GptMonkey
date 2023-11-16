@@ -33,7 +33,8 @@ public class ShippingPossibilitiesMatcher implements ItemSummaryMatcher {
     List<MerchandiseReasoningDto> result = new ArrayList<>();
     List<ShippingOptionSummary> shippingOptions = itemSummary.getShippingOptions();
 
-    if (shippingOptions == null || shippingOptions.isEmpty() || metadata.getMinShippingCostUsd().isEmpty()) {
+    if (shippingOptions == null || shippingOptions.isEmpty() ||
+        metadata.getEbayFindingDto().getMinShippingCostUsd().isEmpty()) {
       result.add(newReasoningDto(String.format("The item has no shipping cost: shippingOptions=%s", shippingOptions),
           UNPROCESSABLE));
     }

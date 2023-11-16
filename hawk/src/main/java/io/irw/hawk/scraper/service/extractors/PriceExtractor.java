@@ -1,6 +1,11 @@
 package io.irw.hawk.scraper.service.extractors;
 
+import static io.irw.hawk.dto.ebay.EbayListingTypeEnum.AUCTION;
+import static io.irw.hawk.dto.ebay.EbayListingTypeEnum.FIXED_PRICE;
+
 import com.ebay.buy.browse.model.ItemSummary;
+import io.irw.hawk.dto.ebay.EbayFindingDto;
+import io.irw.hawk.dto.ebay.EbayListingTypeEnum;
 import io.irw.hawk.dto.merchandise.ProductVariantEnum;
 import io.irw.hawk.scraper.model.MerchandiseMetadataDto;
 import io.irw.hawk.scraper.model.ProcessingPipelineStep;
@@ -8,6 +13,7 @@ import io.irw.hawk.scraper.service.matchers.ShippingPossibilitiesMatcher;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
+import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -23,7 +29,8 @@ public class PriceExtractor implements ItemSummaryDataExtractor {
 
   @Override
   public List<Class<? extends ProcessingPipelineStep>> dependsOn() {
-    return List.of(PieceCountExtractor.class, ShippingCostExtractor.class, ShippingPossibilitiesMatcher.class);
+    return List.of(ListingTypeExtractor.class, PieceCountExtractor.class, ShippingCostExtractor.class,
+        ShippingPossibilitiesMatcher.class);
   }
 
   @Override
@@ -33,16 +40,31 @@ public class PriceExtractor implements ItemSummaryDataExtractor {
 
   @Override
   public void extractDataFromItemSummary(ItemSummary itemSummary, MerchandiseMetadataDto metadata) {
-    double priceDoubleValue = Double.parseDouble(itemSummary.getPrice().getValue());
-    metadata.setTotalPriceUsd(BigDecimal.valueOf(priceDoubleValue));
-    metadata.setPricePerPieceUsd(metadata.getNumberOfPieces()
-        .flatMap(pieces -> metadata.getMinShippingCostUsd()
-            .map(shippingCost -> calculatePricePerPieceWithShipping(metadata, pieces, shippingCost))));
+    EbayFindingDto ebayFindingDto = metadata.getEbayFindingDto();
+
+    if (ebayFindingDto.getListingTypes().contains(AUCTION)) {
+      var priceValue = BigDecimal.valueOf(Double.parseDouble(itemSummary.getCurrentBidPrice().getValue()));
+      ebayFindingDto.setCurrentAuctionPriceUsd(Optional.of(priceValue));
+
+      ebayFindingDto.setCurrentAucPricePerPieceWithShippingUsd(ebayFindingDto.getNumberOfPieces()
+          .flatMap(pieces -> ebayFindingDto.getMinShippingCostUsd()
+              .map(shippingCost -> calculatePricePerPieceWithShipping(priceValue, pieces, shippingCost))));
+    }
+
+    if(itemSummary.getBuyingOptions().contains(FIXED_PRICE)) {
+      var priceValue = BigDecimal.valueOf(Double.parseDouble(itemSummary.getPrice().getValue()));
+      ebayFindingDto.setBuyItNowPriceUsd(Optional.of(priceValue));
+      
+      ebayFindingDto.setBuyNowPricePerPieceWithShippingUsd(ebayFindingDto.getNumberOfPieces()
+          .flatMap(pieces -> ebayFindingDto.getMinShippingCostUsd()
+              .map(shippingCost -> calculatePricePerPieceWithShipping(priceValue, pieces, shippingCost))));
+    }
   }
 
   @NotNull
-  private static BigDecimal calculatePricePerPieceWithShipping(MerchandiseMetadataDto metadata, Integer pieces, BigDecimal shippingCost) {
-    return metadata.getTotalPriceUsd()
+  private static BigDecimal calculatePricePerPieceWithShipping(BigDecimal priceWithoutShipping, Integer pieces,
+      BigDecimal shippingCost) {
+    return priceWithoutShipping
         .add(shippingCost)
         .divide(BigDecimal.valueOf(pieces), RoundingMode.HALF_UP);
   }

@@ -24,6 +24,6 @@ public class PieceCountExtractor implements ItemSummaryDataExtractor {
 
   @Override
   public void extractDataFromItemSummary(ItemSummary itemSummary, MerchandiseMetadataDto metadata) {
-    metadata.setNumberOfPieces(Optional.of(1));
+    metadata.getEbayFindingDto().setNumberOfPieces(Optional.of(1));
   }
 }
