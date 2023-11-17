@@ -1,7 +1,7 @@
 package io.irw.hawk.entity;
 
 import io.hypersistence.utils.hibernate.type.array.EnumArrayType;
-import io.hypersistence.utils.hibernate.type.array.ListArrayType;
+import io.hypersistence.utils.hibernate.type.array.StringArrayType;
 import io.hypersistence.utils.hibernate.type.array.internal.AbstractArrayType;
 import io.hypersistence.utils.hibernate.type.basic.PostgreSQLEnumType;
 import io.irw.hawk.dto.ebay.EbayListingStatusEnum;
@@ -19,8 +19,6 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.List;
-import java.util.Optional;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,10 +33,6 @@ import org.hibernate.annotations.Type;
 @Setter
 @Entity
 @Table(name = "ebay_finding", schema = "merchandise_db")
-@TypeDef(
-    name = "list-array",
-    typeClass = ListArrayType.class
-)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class EbayFinding {
 
@@ -51,6 +45,9 @@ public class EbayFinding {
       generator = "ebay_finding_seq")
   Long id;
 
+  @Column(name = "captured_at", nullable = false)
+  private Instant capturedAt;
+
   @Column(name = "ebay_id_str", nullable = false, unique = true)
   @EqualsAndHashCode.Include
   private String ebayIdStr;
@@ -59,42 +56,51 @@ public class EbayFinding {
   @EqualsAndHashCode.Include
   private String legacyEbayIdStr;
 
-  @Column(name = "item_title", nullable = false)
-  private String itemTitle;
+  @Column(name = "title", nullable = false)
+  private String title;
 
-  @Column(name = "captured_at", nullable = false)
-  private Instant capturedAt;
+  @Column(name = "web_url", nullable = false)
+  private String webUrl;
 
-  @Column(name = "ends_on", nullable = false)
-  private Instant endsOn;
+  @Column(name = "listing_created_at", nullable = false)
+  private Instant listingCreatedAt;
+
+  @Column(name = "listing_ends_at")
+  private Instant listingEndsAt;
 
   @Enumerated(EnumType.STRING)
-  @Column(name = "listing_type", nullable = false, columnDefinition = "ebay_listing_type[]")
+  @Column(name = "listing_types", nullable = false, columnDefinition = "ebay_listing_type[]")
   @Type(value=EnumArrayType.class,
       parameters = @Parameter(
           name = AbstractArrayType.SQL_ARRAY_TYPE,
           value = "ebay_listing_type"
       ))
-  private List<EbayListingTypeEnum> listingTypes;
+  private EbayListingTypeEnum[] listingTypes;
 
   @Enumerated(EnumType.STRING)
   @Column(name = "listing_status", nullable = false, columnDefinition = "ebay_listing_status")
   @Type(PostgreSQLEnumType.class)
-  private EbayListingStatusEnum listingStatusEnum;
+  private EbayListingStatusEnum listingStatus;
 
   @ManyToOne
   @JoinColumn(name = "seller_id", nullable = false)
   private EbaySeller seller;
 
-  // Add the following fields with nullable annotations to match EbayFindingDto
+  @Column(name = "images", columnDefinition = "varchar[]")
+  @Type(value = StringArrayType.class)
+  private String[] imageUrls;
+
+  @Column(name = "top_rated_buying_experience", nullable = false)
+  private Boolean topRatedBuyingExperience;
+
+  @Column(name = "item_description")
+  private String itemDescription;
+
   @Column(name = "number_of_pieces")
   private Integer numberOfPieces;
 
   @Column(name = "bid_count")
-  private int bidCount;
-
-  @Column(name = "item_description")
-  private String itemDescription;
+  private Integer bidCount;
 
   // Prices
 

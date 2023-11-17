@@ -20,6 +20,11 @@ databaseChangeLog:
                     primaryKey: true
                     primaryKeyName: pk_ebay_finding
               - column:
+                  name: captured_at
+                  type: TIMESTAMPTZ
+                  constraints:
+                    nullable: false
+              - column:
                   name: ebay_id_str
                   type: VARCHAR
                   constraints:
@@ -30,43 +35,29 @@ databaseChangeLog:
                   type: VARCHAR
                   constraints:
                     nullable: false
-                    unique: true
               - column:
-                  name: item_title
+                  name: title
                   type: VARCHAR
                   constraints:
                     nullable: false
               - column:
-                  name: item_description
+                  name: web_url
                   type: VARCHAR
+                  constraints:
+                    nullable: false
               - column:
-                  name: current_auction_price_usd
-                  type: NUMERIC(8,2)
-              - column:
-                  name: final_price_usd
-                  type: NUMERIC(8,2)
-              - column:
-                  name: min_shipping_usd
-                  type: NUMERIC(8,2)
-              - column:
-                  name: buy_it_now_price_usd
-                  type: NUMERIC(8,2)
-              - column:
-                  name: bid_count
-                  type: INTEGER
-              - column:
-                  name: captured_at
+                  name: listing_created_at
                   type: TIMESTAMPTZ
                   constraints:
                     nullable: false
               - column:
-                  name: ends_on
+                  name: listing_ends_at
                   type: TIMESTAMPTZ
-                  constraints:
-                    nullable: false
+#                  constraints:
+#                    nullable: false
               - column:
-                  name: listing_type
-                  type: ebay_listing_type
+                  name: listing_types
+                  type: ebay_listing_type[]
                   constraints:
                     nullable: false
               - column:
@@ -80,6 +71,41 @@ databaseChangeLog:
                   constraints:
                     foreignKeyName: fk_ebay_finding_seller_id
                     references: ebay_seller(id)
+              - column:
+                  name: images
+                  type: VARCHAR[]
+              - column:
+                  name: top_rated_buying_experience
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: item_description
+                  type: VARCHAR
+              - column:
+                  name: number_of_pieces
+                  type: INTEGER
+              - column:
+                  name: bid_count
+                  type: INTEGER
+              - column:
+                  name: current_auction_price_usd
+                  type: NUMERIC(8,2)
+              - column:
+                  name: buy_it_now_price_usd
+                  type: NUMERIC(8,2)
+              - column:
+                  name: min_shipping_cost_usd
+                  type: NUMERIC(8,2)
+              - column:
+                  name: buy_now_price_pp_with_shipping_usd
+                  type: NUMERIC(8,2)
+              - column:
+                  name: current_auc_price_pp_with_shipping_usd
+                  type: NUMERIC(8,2)
+              - column:
+                  name: final_auction_price_without_shipping_usd
+                  type: NUMERIC(8,2)
 
         # Adding foreign key constraints
         - addForeignKeyConstraint:

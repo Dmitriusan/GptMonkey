@@ -1,18 +1,15 @@
 package io.irw.hawk.mapper;
 
 import com.ebay.buy.browse.model.ItemSummary;
-import com.ebay.buy.browse.model.Seller;
 import io.irw.hawk.dto.ebay.EbayFindingDto;
 import io.irw.hawk.dto.ebay.EbaySellerDto;
 import io.irw.hawk.entity.EbayFinding;
-import io.irw.hawk.entity.EbaySeller;
 import java.math.BigDecimal;
 import java.util.Optional;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import org.mapstruct.Named;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 
@@ -29,6 +26,10 @@ public interface EbayFindingMapper {
   @Mapping(target = "ebayIdStr", source = "itemSummary.itemId")
   @Mapping(target = "legacyEbayIdStr", source = "itemSummary.legacyItemId")
   @Mapping(target = "seller", source = "ebaySellerDto")
+  @Mapping(target = "title", source = "itemSummary.title")
+  @Mapping(target = "listingCreatedAt", source = "itemSummary.itemCreationDate")
+  @Mapping(target = "webUrl", source = "itemSummary.itemWebUrl")
+  @Mapping(target = "topRatedBuyingExperience", source = "itemSummary.topRatedBuyingExperience")
   EbayFindingDto itemSummaryToEbayFindingDto(ItemSummary itemSummary, EbaySellerDto ebaySellerDto);
 
 
@@ -59,15 +60,27 @@ public interface EbayFindingMapper {
 
   // Handle mapping Optional fields to nullable columns in the entity
   default Integer mapOptionalInteger(Optional<Integer> value) {
-    return value.orElse(null);
+    if (value != null) {
+      return value.orElse(null);
+    } else {
+      return null;
+    }
   }
 
   default BigDecimal mapOptionalBigDecimal(Optional<BigDecimal> value) {
-    return value.orElse(null);
+    if (value != null) {
+      return value.orElse(null);
+    } else {
+      return null;
+    }
   }
 
   default String mapOptionalString(Optional<String> value) {
-    return value.orElse(null);
+    if (value != null) {
+      return value.orElse(null);
+    } else {
+      return null;
+    }
   }
 
   // Helper methods to map null values to Optional

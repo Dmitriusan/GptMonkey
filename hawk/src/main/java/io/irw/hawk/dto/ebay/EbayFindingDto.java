@@ -30,30 +30,47 @@ import lombok.experimental.FieldDefaults;
 public class EbayFindingDto {
 
   Long id;
+  Instant capturedAt;
   String ebayIdStr;
   String legacyEbayIdStr;
-  String itemTitle;
+  String title;
+  String webUrl;
 
-  Instant capturedAt;
-  Instant endsOn;
+  Instant listingCreatedAt;
+  Instant listingEndsAt; // Not implemented yet
+
   @Default
   List<EbayListingTypeEnum> listingTypes = new ArrayList<>();
-  EbayListingStatusEnum listingStatusEnum;
+  EbayListingStatusEnum listingStatus;
   EbaySellerDto seller;
 
-  Optional<String> itemDescription;
-  Optional<Integer> numberOfPieces;
-  Optional<Integer> bidCount;
+  @Default
+  List<String> imageUrls = new ArrayList<>();
+
+  Boolean topRatedBuyingExperience;
+
+  @Default
+  Optional<String> itemDescription = Optional.empty();
+  @Default
+  Optional<Integer> numberOfPieces = Optional.empty();
+  @Default
+  Optional<Integer> bidCount = Optional.empty();
 
   // Prices
-  Optional<BigDecimal> currentAuctionPriceUsd;
-  Optional<BigDecimal> buyItNowPriceUsd;
-  Optional<BigDecimal> minShippingCostUsd;
-  Optional<BigDecimal> buyNowPricePerPieceWithShippingUsd;
-  Optional<BigDecimal> currentAucPricePerPieceWithShippingUsd;
+  @Default
+  Optional<BigDecimal> currentAuctionPriceUsd = Optional.empty();
+  @Default
+  Optional<BigDecimal> buyItNowPriceUsd = Optional.empty();
+  @Default
+  Optional<BigDecimal> minShippingCostUsd = Optional.empty();
+  @Default
+  Optional<BigDecimal> buyNowPricePerPieceWithShippingUsd = Optional.empty();
+  @Default
+  Optional<BigDecimal> currentAucPricePerPieceWithShippingUsd = Optional.empty();
   /**
    * Price when auction ends
    */
-  Optional<BigDecimal> finalAuctionPriceWithoutShippingUsd;
+  @Default
+  Optional<BigDecimal> finalAuctionPriceWithoutShippingUsd = Optional.empty();
 
 }

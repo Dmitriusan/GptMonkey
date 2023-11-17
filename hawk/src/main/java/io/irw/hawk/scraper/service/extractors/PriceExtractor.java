@@ -5,7 +5,6 @@ import static io.irw.hawk.dto.ebay.EbayListingTypeEnum.FIXED_PRICE;
 
 import com.ebay.buy.browse.model.ItemSummary;
 import io.irw.hawk.dto.ebay.EbayFindingDto;
-import io.irw.hawk.dto.ebay.EbayListingTypeEnum;
 import io.irw.hawk.dto.merchandise.ProductVariantEnum;
 import io.irw.hawk.scraper.model.MerchandiseMetadataDto;
 import io.irw.hawk.scraper.model.ProcessingPipelineStep;
@@ -29,7 +28,7 @@ public class PriceExtractor implements ItemSummaryDataExtractor {
 
   @Override
   public List<Class<? extends ProcessingPipelineStep>> dependsOn() {
-    return List.of(ListingTypeExtractor.class, PieceCountExtractor.class, ShippingCostExtractor.class,
+    return List.of(BasicFieldExtractor.class, PieceCountExtractor.class, ShippingCostExtractor.class,
         ShippingPossibilitiesMatcher.class);
   }
 

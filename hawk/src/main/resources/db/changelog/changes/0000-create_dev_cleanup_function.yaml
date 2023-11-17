@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0000-create_dev_cleanup_function
+      author: dmitriusan
+      changes:
+        - sqlFile:
+            dbms: postgresql
+            endDelimiter: ;;
+            path: db/changelog/changes/functions/cleanup_dev_db_function.sql

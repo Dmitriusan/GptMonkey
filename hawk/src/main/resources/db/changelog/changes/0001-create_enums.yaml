@@ -35,6 +35,7 @@ databaseChangeLog:
             sql: |
               CREATE TYPE ebay_listing_type AS ENUM (
                 'AUCTION',
+                'BEST_OFFER',
                 'FIXED_PRICE'
               ); 
               

@@ -5,7 +5,7 @@ import io.irw.hawk.dto.merchandise.ProductVariantEnum;
 import io.irw.hawk.scraper.model.MerchandiseMetadataDto;
 import io.irw.hawk.scraper.model.MerchandiseReasoningDto;
 import io.irw.hawk.scraper.model.ProcessingPipelineStep;
-import io.irw.hawk.scraper.service.extractors.ListingTypeExtractor;
+import io.irw.hawk.scraper.service.extractors.BasicFieldExtractor;
 import io.irw.hawk.scraper.service.extractors.PieceCountExtractor;
 import io.irw.hawk.scraper.service.extractors.PriceExtractor;
 import io.irw.hawk.scraper.service.extractors.ShippingCostExtractor;
@@ -28,7 +28,7 @@ public class BaselineItemDataMatcher implements ItemSummaryMatcher {
 
   @Override
   public List<Class<? extends ProcessingPipelineStep>> dependsOn() {
-    return List.of(ListingTypeExtractor.class, ReputationMatcher.class, PriceExtractor.class, PieceCountExtractor.class,
+    return List.of(BasicFieldExtractor.class, ReputationMatcher.class, PriceExtractor.class, PieceCountExtractor.class,
         ShippingCostExtractor.class, ShippingPossibilitiesMatcher.class);
   }
 

@@ -4,7 +4,8 @@ import static io.irw.hawk.scraper.model.MerchandiseVerdictType.HUMAN_INTERVENTIO
 import static io.irw.hawk.scraper.model.MerchandiseVerdictType.REJECT;
 
 import com.ebay.buy.browse.model.ItemSummary;
-import com.ebay.buy.browse.model.Seller;
+import io.irw.hawk.dto.ebay.EbayFindingDto;
+import io.irw.hawk.dto.ebay.EbaySellerDto;
 import io.irw.hawk.dto.merchandise.ProductVariantEnum;
 import io.irw.hawk.scraper.model.MerchandiseMetadataDto;
 import io.irw.hawk.scraper.model.MerchandiseReasoningDto;
@@ -24,15 +25,16 @@ public class ReputationMatcher implements ItemSummaryMatcher {
 
   @Override
   public List<MerchandiseReasoningDto> match(ItemSummary itemSummary, MerchandiseMetadataDto metadata) {
+    EbayFindingDto ebayFindingDto = metadata.getEbayFindingDto();
+    EbaySellerDto seller = ebayFindingDto.getSeller();
     List<MerchandiseReasoningDto> result = new ArrayList<>();
-    Seller seller = itemSummary.getSeller();
 
-    float feedbackPercentage = Float.parseFloat(seller.getFeedbackPercentage());
+    float feedbackPercentage = seller.getReputationPercentage();
     if (feedbackPercentage < 80.0) {
       result.add(newReasoningDto(String.format("Seller has a bad reputation %s", feedbackPercentage), REJECT));
     }
 
-    if (feedbackPercentage < 95.0) {
+    if (feedbackPercentage < 95.0 && ! ebayFindingDto.getTopRatedBuyingExperience()) {
       result.add(newReasoningDto(String.format("Seller has a shady reputation %s", feedbackPercentage),
           HUMAN_INTERVENTION_REQUIRED));
     }

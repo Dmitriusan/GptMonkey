@@ -21,4 +21,9 @@ public enum ProductVariantEnum {
     this.name = StringUtils.joinWith("/", group.getName(), descriptor);
   }
 
+  @Override
+  public String toString() {
+    return name;
+  }
+
 }
