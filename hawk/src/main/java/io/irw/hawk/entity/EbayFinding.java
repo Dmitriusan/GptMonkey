@@ -5,7 +5,7 @@ import io.hypersistence.utils.hibernate.type.array.StringArrayType;
 import io.hypersistence.utils.hibernate.type.array.internal.AbstractArrayType;
 import io.hypersistence.utils.hibernate.type.basic.PostgreSQLEnumType;
 import io.irw.hawk.dto.ebay.EbayListingStatusEnum;
-import io.irw.hawk.dto.ebay.EbayListingTypeEnum;
+import io.irw.hawk.dto.ebay.EbayBuyingOptionEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -69,13 +69,13 @@ public class EbayFinding {
   private Instant listingEndsAt;
 
   @Enumerated(EnumType.STRING)
-  @Column(name = "listing_types", nullable = false, columnDefinition = "ebay_listing_type[]")
+  @Column(name = "buying_options", nullable = false, columnDefinition = "ebay_buying_option[]")
   @Type(value=EnumArrayType.class,
       parameters = @Parameter(
           name = AbstractArrayType.SQL_ARRAY_TYPE,
-          value = "ebay_listing_type"
+          value = "ebay_buying_option"
       ))
-  private EbayListingTypeEnum[] listingTypes;
+  private EbayBuyingOptionEnum[] buyingOptions;
 
   @Enumerated(EnumType.STRING)
   @Column(name = "listing_status", nullable = false, columnDefinition = "ebay_listing_status")

@@ -6,6 +6,7 @@ import com.ebay.buy.browse.api.ItemSummaryApi;
 import com.ebay.buy.browse.model.ItemSummary;
 import com.ebay.buy.browse.model.SearchPagedCollection;
 import io.irw.hawk.dto.ebay.EbayFindingDto;
+import io.irw.hawk.dto.ebay.EbayHighlightDto;
 import io.irw.hawk.dto.ebay.EbaySellerDto;
 import io.irw.hawk.dto.ebay.SearchTermDto;
 import io.irw.hawk.dto.merchandise.HawkScrapeRunDto;
@@ -14,11 +15,10 @@ import io.irw.hawk.integration.ebay.buy.browse.ItemSummaryApiWrapper;
 import io.irw.hawk.mapper.EbayFindingMapper;
 import io.irw.hawk.mapper.EbaySellerMapper;
 import io.irw.hawk.scraper.exceptions.ScrapingException;
-import io.irw.hawk.scraper.model.MerchandiseMetadataDto;
-import io.irw.hawk.scraper.model.MerchandiseReasoningDto;
-import io.irw.hawk.scraper.model.MerchandiseVerdictType;
+import io.irw.hawk.scraper.model.MerchandiseReasoningLog;
+import io.irw.hawk.dto.merchandise.MerchandiseVerdictType;
 import io.irw.hawk.scraper.model.ProcessingPipelineStep;
-import io.irw.hawk.scraper.model.ProcessingPipelineStepMetadataDto;
+import io.irw.hawk.scraper.model.ProcessingPipelineMetadata;
 import io.irw.hawk.scraper.service.domain.EbayFindingService;
 import io.irw.hawk.scraper.service.domain.EbayHighlightService;
 import io.irw.hawk.scraper.service.domain.EbaySellerService;
@@ -34,7 +34,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -76,6 +75,11 @@ public class ScraperService {
     for (SearchTermDto searchTermDto : productScrapeProcessor.generateSearchTerms(targetProductVariant)) {
       SearchPagedCollection result = itemSummaryApi.search(searchTermDto.getSearchParams());
 
+      if (result.getItemSummaries() == null) {
+        log.warn("No items found for search term: {}", searchTermDto);
+        continue;
+      }
+
       for (ItemSummary itemSummary : result.getItemSummaries()) {
         processItemSummary(targetProductVariant, itemSummary, hawkScrapeRunDto);
       }
@@ -84,31 +88,34 @@ public class ScraperService {
 
   private void processItemSummary(ProductVariantEnum targetProductVariant, ItemSummary itemSummary,
       HawkScrapeRunDto hawkScrapeRunDto) {
-
-
     EbaySellerDto ebaySellerDto = ebaySellerService.upsertSeller(
         ebaySellerMapper.sellerToEbaySellerDto(itemSummary.getSeller()));
 
-    MerchandiseMetadataDto metadata = MerchandiseMetadataDto.builder()
-        .hawkScrapeRunDto(hawkScrapeRunDto)
-        .ebayFindingDto(getEbayFindingDto(itemSummary, ebaySellerDto))
+    EbayHighlightDto highlightDto = EbayHighlightDto.builder()
+        .run(hawkScrapeRunDto)
+        .ebayFinding(getEbayFindingDto(itemSummary, ebaySellerDto))
+        .pipelineMetadata(new ProcessingPipelineMetadata())
         .finalVerdict(determineInitialVerdictBasedOnListingType(itemSummary))
         .build();
 
     for (ProcessingPipelineStep pipelineStep : linearExecutionGraphByDependencies(processingPipelineSteps)) {
+      highlightDto.getPipelineMetadata()
+          .newStep(pipelineStep.getClass());
       if (pipelineStep instanceof ItemSummaryMatcher itemSummaryMatcher) {
-        applyMatcher(targetProductVariant, itemSummary, pipelineStep, itemSummaryMatcher, metadata);
-        if (metadata.getFinalVerdict() == MerchandiseVerdictType.ITEM_ALREADY_PERSISTED) {
+        applyMatcher(targetProductVariant, itemSummary, itemSummaryMatcher, highlightDto);
+        if (highlightDto.getFinalVerdict() == MerchandiseVerdictType.ITEM_ALREADY_PERSISTED) {
           break;
         }
       } else if (pipelineStep instanceof ItemSummaryDataExtractor itemSummaryDataExtractor) {
-        applyDataExtractor(targetProductVariant, itemSummary, itemSummaryDataExtractor, metadata);
+        applyDataExtractor(targetProductVariant, itemSummary, itemSummaryDataExtractor, highlightDto);
       } else {
         throw new IllegalStateException("Unknown pipeline step: " + pipelineStep);
       }
     }
 
-    saveOrUpdateEbayFinding(metadata.getEbayFindingDto());
+    EbayFindingDto persistedEbayFindingDto = saveOrUpdateEbayFinding(highlightDto.getEbayFinding());
+    highlightDto.setEbayFinding(persistedEbayFindingDto);
+    ebayHighlightService.saveHighlight(highlightDto);
   }
 
   private static MerchandiseVerdictType determineInitialVerdictBasedOnListingType(ItemSummary itemSummary) {
@@ -121,12 +128,12 @@ public class ScraperService {
     throw new IllegalStateException("Unknown listing type: " + itemSummary.getBuyingOptions());
   }
 
-  private void saveOrUpdateEbayFinding(EbayFindingDto ebayFindingDto) {
+  private EbayFindingDto saveOrUpdateEbayFinding(EbayFindingDto ebayFindingDto) {
     ebayFindingDto.setCapturedAt(Instant.now());
     if (ebayFindingDto.getId() == null) {
-      ebayFindingService.saveFinding(ebayFindingDto);
+      return ebayFindingService.saveFinding(ebayFindingDto);
     } else {
-      ebayFindingService.updateFinding(ebayFindingDto);
+      return ebayFindingService.updateFinding(ebayFindingDto);
     }
   }
 
@@ -136,29 +143,21 @@ public class ScraperService {
   }
 
   private static void applyDataExtractor(ProductVariantEnum targetProductVariant, ItemSummary itemSummary,
-      ItemSummaryDataExtractor itemSummaryDataExtractor, MerchandiseMetadataDto metadata) {
+      ItemSummaryDataExtractor itemSummaryDataExtractor, EbayHighlightDto highlightDto) {
     log.trace("Running extractor: {}", itemSummaryDataExtractor.getClass()
         .getSimpleName());
     if (itemSummaryDataExtractor.isApplicableTo(targetProductVariant)) {
-      itemSummaryDataExtractor.extractDataFromItemSummary(itemSummary, metadata);
+      itemSummaryDataExtractor.extractDataFromItemSummary(itemSummary, highlightDto);
     }
   }
 
   private static void applyMatcher(ProductVariantEnum targetProductVariant, ItemSummary itemSummary,
-      ProcessingPipelineStep pipelineStep, ItemSummaryMatcher itemSummaryMatcher, MerchandiseMetadataDto metadata) {
+      ItemSummaryMatcher itemSummaryMatcher, EbayHighlightDto highlightDto) {
     log.trace("Running matcher: {}", itemSummaryMatcher.getClass().getSimpleName());
     if (itemSummaryMatcher.isApplicableTo(targetProductVariant)) {
-      List<MerchandiseReasoningDto> reasoning = itemSummaryMatcher.match(itemSummary, metadata);
-      metadata.getReasoning()
-          .addAll(reasoning);
+      itemSummaryMatcher.match(itemSummary, highlightDto);
     }
-    List<MerchandiseReasoningDto> reasoningWithoutMatcherRecord = metadata.getReasoning()
-        .stream()
-        .filter(reasoning -> StringUtils.isEmpty(reasoning.getReasoningMatcher()))
-        .toList();
-    validateMatcherRecordFieldPresense(itemSummaryMatcher, reasoningWithoutMatcherRecord);
-    updateMerchandiseVerdict(metadata);
-    storeProcessingPipelineStepMetadata(pipelineStep, metadata);
+    updateMerchandiseVerdict(highlightDto);
   }
 
   private ProductScrapeProcessor findMatchingScrapingProcessor(ProductVariantEnum targetProductVariant) {
@@ -171,36 +170,17 @@ public class ScraperService {
       log.error(errorMessage);
       throw new ScrapingException(errorMessage);
     }
-    ProductScrapeProcessor productScrapeProcessor = matchingProcessors.get(0);
-    return productScrapeProcessor;
+    return matchingProcessors.get(0);
   }
 
-
-  private static void storeProcessingPipelineStepMetadata(ProcessingPipelineStep pipelineStep,
-      MerchandiseMetadataDto metadata) {
-    metadata.getProcessingPipelineStepMetadataDtos()
-        .add(ProcessingPipelineStepMetadataDto.builder()
-            .processingPipelineStep(pipelineStep.getClass())
-            .build());
-  }
-
-  private static void validateMatcherRecordFieldPresense(ItemSummaryMatcher itemSummaryMatcher,
-      List<MerchandiseReasoningDto> reasoningWithoutMatcherRecord) {
-    if (!reasoningWithoutMatcherRecord.isEmpty()) {
-      throw new IllegalStateException(String.format("Matcher %s has created reasoning without matcher " + "record: %s",
-          itemSummaryMatcher.getClass()
-              .getName(), reasoningWithoutMatcherRecord));
-    }
-  }
-
-  private static void updateMerchandiseVerdict(MerchandiseMetadataDto metadata) {
-    MerchandiseVerdictType verdict = metadata.getReasoning()
+  private static void updateMerchandiseVerdict(EbayHighlightDto highlightDto) {
+    MerchandiseVerdictType verdict = highlightDto.getPipelineMetadata().filterReasoningsFromLog()
         .stream()
         .min(Comparator.comparing(merchandiseReasoningDto -> merchandiseReasoningDto.getVerdict()
             .ordinal()))
-        .map(MerchandiseReasoningDto::getVerdict)
+        .map(MerchandiseReasoningLog::getVerdict)
         .orElse(MerchandiseVerdictType.BUYING_OPPORTUNITY);
-    metadata.setFinalVerdict(verdict);
+    highlightDto.setFinalVerdict(verdict);
   }
 
 }

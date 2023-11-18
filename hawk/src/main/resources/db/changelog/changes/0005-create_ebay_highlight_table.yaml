@@ -34,8 +34,15 @@ databaseChangeLog:
                     foreignKeyName: fk_ebay_highlight_ebay_finding_id
                     references: ebay_finding(id)
               - column:
+                  name: pipeline_metadata
+                  type: jsonb
+                  constraints:
+                    nullable: false
+              - column:
                   name: final_verdict
                   type: merchandise_verdict_type
+                  constraints:
+                    nullable: false
 
         # Adding foreign key constraints
         - addForeignKeyConstraint:

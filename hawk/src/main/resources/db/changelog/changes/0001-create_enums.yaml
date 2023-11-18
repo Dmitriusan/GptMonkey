@@ -33,7 +33,7 @@ databaseChangeLog:
               );
         - sql:
             sql: |
-              CREATE TYPE ebay_listing_type AS ENUM (
+              CREATE TYPE ebay_buying_option AS ENUM (
                 'AUCTION',
                 'BEST_OFFER',
                 'FIXED_PRICE'

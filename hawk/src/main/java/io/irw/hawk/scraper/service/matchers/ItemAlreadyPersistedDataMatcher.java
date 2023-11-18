@@ -1,15 +1,11 @@
 package io.irw.hawk.scraper.service.matchers;
 
 import com.ebay.buy.browse.model.ItemSummary;
+import io.irw.hawk.dto.ebay.EbayHighlightDto;
 import io.irw.hawk.dto.merchandise.ProductVariantEnum;
-import io.irw.hawk.scraper.model.MerchandiseMetadataDto;
-import io.irw.hawk.scraper.model.MerchandiseReasoningDto;
-import io.irw.hawk.scraper.model.MerchandiseVerdictType;
+import io.irw.hawk.dto.merchandise.MerchandiseVerdictType;
 import io.irw.hawk.scraper.model.ProcessingPipelineStep;
 import io.irw.hawk.scraper.service.domain.EbayFindingService;
-import io.irw.hawk.scraper.service.extractors.PieceCountExtractor;
-import io.irw.hawk.scraper.service.extractors.PriceExtractor;
-import io.irw.hawk.scraper.service.extractors.ShippingCostExtractor;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -40,13 +36,11 @@ public class ItemAlreadyPersistedDataMatcher implements ItemSummaryMatcher {
   }
 
   @Override
-  public List<MerchandiseReasoningDto> match(ItemSummary itemSummary, MerchandiseMetadataDto metadata) {
-    if (metadata.getEbayFindingDto().getId() != null) {
+  public void match(ItemSummary itemSummary, EbayHighlightDto highlightDto) {
+    if (highlightDto.getEbayFinding().getId() != null) {
       log.debug("Skipping item {} as it is already present at the DB", itemSummary.getItemId());
-      return List.of(newReasoningDto("Item %s is already present at the DB".formatted(itemSummary.getItemId()),
-          MerchandiseVerdictType.ITEM_ALREADY_PERSISTED));
-    } else {
-      return List.of();
+      addNewReasoning(highlightDto, "Item %s is already present at the DB".formatted(itemSummary.getItemId()),
+          MerchandiseVerdictType.ITEM_ALREADY_PERSISTED);
     }
   }
 }

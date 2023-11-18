@@ -2,7 +2,7 @@ package io.irw.hawk.scraper.service.extractors;
 
 import com.ebay.buy.browse.model.ItemSummary;
 import io.irw.hawk.dto.merchandise.ProductVariantEnum;
-import io.irw.hawk.scraper.model.MerchandiseMetadataDto;
+import io.irw.hawk.dto.ebay.EbayHighlightDto;
 import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.Optional;
@@ -24,7 +24,7 @@ public class ShippingCostExtractor implements ItemSummaryDataExtractor {
   }
 
   @Override
-  public void extractDataFromItemSummary(ItemSummary itemSummary, MerchandiseMetadataDto metadata) {
+  public void extractDataFromItemSummary(ItemSummary itemSummary, EbayHighlightDto highlightDto) {
     Optional<BigDecimal> minShippingCost = Optional.ofNullable(itemSummary.getShippingOptions())
         .flatMap(shippingOptions -> shippingOptions.stream()
           .filter(
@@ -32,7 +32,7 @@ public class ShippingCostExtractor implements ItemSummaryDataExtractor {
           .map(shippingOptionSummary -> Double.valueOf(shippingOptionSummary.getShippingCost().getValue()))
           .min(Comparator.naturalOrder()))
           .map(BigDecimal::valueOf);
-    metadata.getEbayFindingDto().setMinShippingCostUsd(minShippingCost);
+    highlightDto.getEbayFinding().setMinShippingCostUsd(minShippingCost);
   }
 
 }

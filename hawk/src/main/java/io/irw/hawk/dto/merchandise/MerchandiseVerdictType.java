@@ -1,4 +1,4 @@
-package io.irw.hawk.scraper.model;
+package io.irw.hawk.dto.merchandise;
 
 import java.util.Arrays;
 import java.util.List;

@@ -1,15 +1,16 @@
 package io.irw.hawk.scraper.service.processors.skates.parts.matchers;
 
-import static io.irw.hawk.dto.ebay.EbayListingTypeEnum.AUCTION;
-import static io.irw.hawk.dto.ebay.EbayListingTypeEnum.FIXED_PRICE;
-import static io.irw.hawk.scraper.model.MerchandiseVerdictType.NOT_INTERESTING;
-import static io.irw.hawk.scraper.model.MerchandiseVerdictType.UNPROCESSABLE;
+import static io.irw.hawk.dto.ebay.EbayBuyingOptionEnum.AUCTION;
+import static io.irw.hawk.dto.ebay.EbayBuyingOptionEnum.FIXED_PRICE;
+import static io.irw.hawk.dto.merchandise.MerchandiseVerdictType.NOT_INTERESTING;
+import static io.irw.hawk.dto.merchandise.MerchandiseVerdictType.UNPROCESSABLE;
 
 import com.ebay.buy.browse.model.ItemSummary;
 import io.irw.hawk.dto.ebay.EbayFindingDto;
+import io.irw.hawk.dto.merchandise.MerchandiseVerdictType;
 import io.irw.hawk.dto.merchandise.ProductVariantEnum;
-import io.irw.hawk.scraper.model.MerchandiseMetadataDto;
-import io.irw.hawk.scraper.model.MerchandiseReasoningDto;
+import io.irw.hawk.dto.ebay.EbayHighlightDto;
+import io.irw.hawk.scraper.model.MerchandiseReasoningLog;
 import io.irw.hawk.scraper.model.ProcessingPipelineStep;
 import io.irw.hawk.scraper.service.matchers.BaselineItemDataMatcher;
 import io.irw.hawk.scraper.service.matchers.ItemSummaryMatcher;
@@ -39,47 +40,48 @@ public class LabedaWheelsInterestMatcher implements ItemSummaryMatcher {
   }
 
   @Override
-  public List<MerchandiseReasoningDto> match(ItemSummary itemSummary, MerchandiseMetadataDto metadata) {
-    List<MerchandiseReasoningDto> result = new ArrayList<>();
-    if (! metadata.getFinalVerdict().isBuyable()) {
-      return result;
+  public void match(ItemSummary itemSummary, EbayHighlightDto highlightDto) {
+    MerchandiseVerdictType finalVerdict = highlightDto.getFinalVerdict();
+    if (! finalVerdict.isBuyable()) {
+      highlightDto.getPipelineMetadata()
+          .addLog("Skipping item as it is not buyable (status=%s)".formatted(finalVerdict));
+      return;
     }
 
-    EbayFindingDto ebayFindingDto = metadata.getEbayFindingDto();
+    EbayFindingDto ebayFindingDto = highlightDto.getEbayFinding();
 
-    if (ebayFindingDto.getListingTypes().contains(AUCTION)) {
+    if (ebayFindingDto.getBuyingOptions().contains(AUCTION)) {
       var currentAucPricePerPieceWithShippingUsd = ebayFindingDto.getCurrentAucPricePerPieceWithShippingUsd();
-      List<MerchandiseReasoningDto> reasonings = checkPricePerPiece(metadata,
+      List<MerchandiseReasoningLog> reasonings = checkPricePerPiece(highlightDto,
           currentAucPricePerPieceWithShippingUsd.get());
-      result.addAll(reasonings);
+      reasonings.forEach(reasoning -> highlightDto.getPipelineMetadata().addReasoning(reasoning));
     } else if(itemSummary.getBuyingOptions().contains(FIXED_PRICE)) {
       var buyNowPricePerPieceWithShippingUsd = ebayFindingDto.getBuyNowPricePerPieceWithShippingUsd();
-      List<MerchandiseReasoningDto> reasonings = checkPricePerPiece(metadata, buyNowPricePerPieceWithShippingUsd.get());
-      result.addAll(reasonings);
+      List<MerchandiseReasoningLog> reasonings = checkPricePerPiece(highlightDto, buyNowPricePerPieceWithShippingUsd.get());
+      reasonings.forEach(reasoning -> highlightDto.getPipelineMetadata().addReasoning(reasoning));
     } else {
-      result.add(newReasoningDto("Unknown listing type", UNPROCESSABLE));
+      addNewReasoning(highlightDto, "Unknown listing type", UNPROCESSABLE);
     }
 
     // TODO: Check if buy it now price at auction is ~2/3 of my desired price - recommend buying immediately
-    return result;
   }
 
-  private List<MerchandiseReasoningDto> checkPricePerPiece(MerchandiseMetadataDto metadata,
+  private List<MerchandiseReasoningLog> checkPricePerPiece(EbayHighlightDto highlightDto,
       BigDecimal pricePerPieceWithShippingUsd) {
-    List<MerchandiseReasoningDto> result = new ArrayList<>();
-    EbayFindingDto ebayFindingDto = metadata.getEbayFindingDto();
+    List<MerchandiseReasoningLog> result = new ArrayList<>();
+    EbayFindingDto ebayFindingDto = highlightDto.getEbayFinding();
     int numberOfPieces = ebayFindingDto.getNumberOfPieces().get();
     if (pricePerPieceWithShippingUsd.compareTo(DESIRED_PRICE_PER_WHEEL) > 0) {
-      result.add(newReasoningDto(String.format("Too pricey: %s$ per wheel > %s$", pricePerPieceWithShippingUsd,
-          DESIRED_PRICE_PER_WHEEL), NOT_INTERESTING));
+      addNewReasoning(highlightDto, String.format("Too pricey: %s$ per wheel > %s$", pricePerPieceWithShippingUsd,
+          DESIRED_PRICE_PER_WHEEL), NOT_INTERESTING);
     } else if (numberOfPieces < DESIRED_MIN_WHEEL_COUNT) {
       BigDecimal priceBenefit = BigDecimal.valueOf(numberOfPieces)
           .multiply(DESIRED_PRICE_PER_WHEEL)
           .subtract((BigDecimal.valueOf(numberOfPieces).multiply(pricePerPieceWithShippingUsd)));
       if (priceBenefit.compareTo(MEEST_SHIPPING_AND_HANDLING_PER_SHIPPING) < 0) {
-        result.add(newReasoningDto(
+        addNewReasoning(highlightDto,
             String.format("Items are cheap, but too small quantity for Meest shipping&handling: %s$ price "
-                + "benefit", priceBenefit), NOT_INTERESTING));
+                + "benefit", priceBenefit), NOT_INTERESTING);
       }
     }
     return result;

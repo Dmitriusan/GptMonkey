@@ -1,6 +1,6 @@
 package io.irw.hawk.dto.ebay;
 
-public enum EbayListingTypeEnum {
+public enum EbayBuyingOptionEnum {
 
   AUCTION, BEST_OFFER, FIXED_PRICE
 

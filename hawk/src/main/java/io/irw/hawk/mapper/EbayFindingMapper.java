@@ -18,7 +18,6 @@ public interface EbayFindingMapper {
 
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
   @Mapping(target = "id", ignore = true)
-  @Mapping(target = "ebayIdStr", ignore = true)
   EbayFinding updateFindingEntity(@MappingTarget EbayFinding persistentFindingEntity, EbayFindingDto latestFindingDto);
 
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE)

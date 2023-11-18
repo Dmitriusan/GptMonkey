@@ -40,7 +40,7 @@ public class EbayFindingDto {
   Instant listingEndsAt; // Not implemented yet
 
   @Default
-  List<EbayListingTypeEnum> listingTypes = new ArrayList<>();
+  List<EbayBuyingOptionEnum> buyingOptions = new ArrayList<>();
   EbayListingStatusEnum listingStatus;
   EbaySellerDto seller;
 

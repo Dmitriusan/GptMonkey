@@ -2,6 +2,7 @@ package io.irw.hawk.scraper.service.domain;
 
 import io.irw.hawk.dto.merchandise.HawkScrapeRunDto;
 import io.irw.hawk.dto.merchandise.ProductVariantEnum;
+import io.irw.hawk.entity.HawkScrapeRun;
 import io.irw.hawk.mapper.HawkScrapeRunMapper;
 import io.irw.hawk.repository.HawkScrapeRunRepository;
 import io.irw.hawk.scraper.service.domain.HawkFlightService;
@@ -30,8 +31,9 @@ public class HawkScrapeRunService {
         .startedAt(Instant.now())
         .productVariant(targetProductVariant)
         .build();
-    hawkFlightRepository.save(hawkScrapeRunMapper.toEntity(hawkScrapeRunDto));
-    return hawkScrapeRunDto;
+    HawkScrapeRun entity = hawkScrapeRunMapper.toEntity(hawkScrapeRunDto);
+    hawkFlightRepository.save(entity);
+    return hawkScrapeRunMapper.toDto(hawkFlightRepository.save(entity));
   }
 
 

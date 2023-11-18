@@ -2,8 +2,7 @@ package io.irw.hawk.scraper.service.matchers;
 
 import com.ebay.buy.browse.model.ItemSummary;
 import io.irw.hawk.dto.merchandise.ProductVariantEnum;
-import io.irw.hawk.scraper.model.MerchandiseMetadataDto;
-import io.irw.hawk.scraper.model.MerchandiseReasoningDto;
+import io.irw.hawk.dto.ebay.EbayHighlightDto;
 import io.irw.hawk.scraper.model.ProcessingPipelineStep;
 import io.irw.hawk.scraper.service.extractors.BasicFieldExtractor;
 import io.irw.hawk.scraper.service.extractors.PieceCountExtractor;
@@ -38,7 +37,5 @@ public class BaselineItemDataMatcher implements ItemSummaryMatcher {
   }
 
   @Override
-  public List<MerchandiseReasoningDto> match(ItemSummary itemSummary, MerchandiseMetadataDto metadata) {
-    return List.of();
-  }
+  public void match(ItemSummary itemSummary, EbayHighlightDto highlightDto) {  }
 }

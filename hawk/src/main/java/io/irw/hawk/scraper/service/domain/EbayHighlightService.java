@@ -26,6 +26,4 @@ public class EbayHighlightService {
     return ebayHighlightMapper.toDto(persisted);
   }
 
-
-
 }

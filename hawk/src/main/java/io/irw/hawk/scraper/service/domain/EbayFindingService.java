@@ -1,18 +1,10 @@
 package io.irw.hawk.scraper.service.domain;
 
-import com.ebay.buy.browse.model.ItemSummary;
 import io.irw.hawk.dto.ebay.EbayFindingDto;
-import io.irw.hawk.dto.ebay.EbaySellerDto;
-import io.irw.hawk.dto.merchandise.HawkScrapeRunDto;
-import io.irw.hawk.dto.merchandise.ProductVariantEnum;
 import io.irw.hawk.entity.EbayFinding;
-import io.irw.hawk.entity.EbaySeller;
 import io.irw.hawk.mapper.EbayFindingMapper;
-import io.irw.hawk.mapper.HawkScrapeRunMapper;
 import io.irw.hawk.repository.EbayFindingRepository;
-import io.irw.hawk.repository.HawkScrapeRunRepository;
-import io.irw.hawk.scraper.model.MerchandiseMetadataDto;
-import java.time.Instant;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -41,20 +33,16 @@ public class EbayFindingService {
         .map(ebayFindingMapper::toDto);
   }
 
-/*  @Transactional
-  public EbayFindingDto upsertFinding(EbayFindingDto ebayFindingDto) {
-    return ebayFindingRepository.findByEbayIdStr(ebayFindingDto.getEbayIdStr())
-        .map(existingFinding -> {
-          EbayFinding updatedFinding = ebayFindingRepository.save(
-              ebayFindingMapper.updateFindingEntity(existingFinding, ebayFindingDto));
-          return ebayFindingMapper.toDto(updatedFinding);
-        })
-        .orElseGet(() -> saveFinding(ebayFindingDto));
-  }*/
-
-
   @Transactional
-  public void updateFinding(EbayFindingDto ebayFindingDto) {
-    // TODO: implement
+  public EbayFindingDto updateFinding(EbayFindingDto ebayFindingDto) {
+    Optional<EbayFinding> optionalExistingFinding = ebayFindingRepository.findByEbayIdStr(ebayFindingDto.getEbayIdStr());
+    if (optionalExistingFinding.isPresent()) {
+      EbayFinding existingFinding = optionalExistingFinding.get();
+      ebayFindingMapper.updateFindingEntity(existingFinding, ebayFindingDto);
+      EbayFinding updatedFinding = ebayFindingRepository.save(existingFinding);
+      return ebayFindingMapper.toDto(updatedFinding);
+    } else {
+      throw new EntityNotFoundException("EbayFinding with eBay ID " + ebayFindingDto.getEbayIdStr() + " not found.");
+    }
   }
 }

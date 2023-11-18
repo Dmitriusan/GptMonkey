@@ -2,6 +2,8 @@ package io.irw.hawk.scraper.model;
 
 import static java.util.stream.Collectors.toMap;
 
+import io.irw.hawk.dto.ebay.EbayHighlightDto;
+import io.irw.hawk.dto.merchandise.MerchandiseVerdictType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -78,5 +80,10 @@ public interface ProcessingPipelineStep extends Comparable<ProcessingPipelineSte
       throw new IllegalArgumentException("Unknown dependency class: " + dependencyClass.getName() + ".");
     }
     return classToStep.get(dependencyClass);
+  }
+
+  default void addLogStatement(EbayHighlightDto highlightDto, String message) {
+    highlightDto.getPipelineMetadata()
+        .addLog(message);
   }
 }

@@ -1,25 +1,25 @@
 package io.irw.hawk.scraper.service.matchers;
 
 import com.ebay.buy.browse.model.ItemSummary;
+import io.irw.hawk.dto.ebay.EbayHighlightDto;
 import io.irw.hawk.dto.merchandise.ProductVariantEnum;
-import io.irw.hawk.scraper.model.MerchandiseMetadataDto;
-import io.irw.hawk.scraper.model.MerchandiseReasoningDto;
-import io.irw.hawk.scraper.model.MerchandiseVerdictType;
+import io.irw.hawk.scraper.model.MerchandiseReasoningLog;
+import io.irw.hawk.dto.merchandise.MerchandiseVerdictType;
 import io.irw.hawk.scraper.model.ProcessingPipelineStep;
-import java.util.List;
 
 public interface ItemSummaryMatcher extends ProcessingPipelineStep {
 
   boolean isApplicableTo(ProductVariantEnum productVariant);
 
-  List<MerchandiseReasoningDto> match(ItemSummary itemSummary, MerchandiseMetadataDto metadata);
+  void match(ItemSummary itemSummary, EbayHighlightDto highlightDto);
 
-  default MerchandiseReasoningDto newReasoningDto(String reason, MerchandiseVerdictType verdict) {
-    return MerchandiseReasoningDto.builder()
-        .reasoningMatcher(this.getClass().getSimpleName())
-        .reason(reason)
-        .verdict(verdict)
-        .build();
+  default void addNewReasoning(EbayHighlightDto highlightDto, String reason,
+      MerchandiseVerdictType verdict) {
+    highlightDto.getPipelineMetadata()
+        .addReasoning(MerchandiseReasoningLog.builder()
+            .reason(reason)
+            .verdict(verdict)
+            .build());
   }
 
 }

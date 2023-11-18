@@ -25,3 +25,9 @@ logging:
         SQL: INFO
       springframework: INFO
       springframework.web.client.RestTemplate: TRACE
+
+hypersistence:
+  utils:
+    jackson:
+      object:
+        mapper: io.irw.hawk.entity.type.CustomObjectMapperSupplier

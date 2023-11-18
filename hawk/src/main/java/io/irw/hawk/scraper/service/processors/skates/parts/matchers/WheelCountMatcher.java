@@ -1,16 +1,14 @@
 package io.irw.hawk.scraper.service.processors.skates.parts.matchers;
 
-import static io.irw.hawk.scraper.model.MerchandiseVerdictType.UNPROCESSABLE;
+import static io.irw.hawk.dto.merchandise.MerchandiseVerdictType.UNPROCESSABLE;
 
 import com.ebay.buy.browse.model.ItemSummary;
 import io.irw.hawk.dto.merchandise.ProductVariantEnum;
-import io.irw.hawk.scraper.model.MerchandiseMetadataDto;
-import io.irw.hawk.scraper.model.MerchandiseReasoningDto;
+import io.irw.hawk.dto.ebay.EbayHighlightDto;
 import io.irw.hawk.scraper.model.ProcessingPipelineStep;
 import io.irw.hawk.scraper.service.matchers.BaselineItemDataMatcher;
 import io.irw.hawk.scraper.service.matchers.ItemSummaryMatcher;
 import io.irw.hawk.scraper.service.processors.skates.parts.extractors.WheelCountExtractor;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -35,12 +33,11 @@ public class WheelCountMatcher implements ItemSummaryMatcher {
   }
 
   @Override
-  public List<MerchandiseReasoningDto> match(ItemSummary itemSummary, MerchandiseMetadataDto metadata) {
-    List<MerchandiseReasoningDto> result = new ArrayList<>();
-    if (metadata.getEbayFindingDto().getNumberOfPieces().isEmpty()) {
-      result.add(newReasoningDto("Could not determine the number of wheels", UNPROCESSABLE));
+  public void match(ItemSummary itemSummary, EbayHighlightDto highlightDto) {
+    if (highlightDto.getEbayFinding().getNumberOfPieces().isEmpty()) {
+      addNewReasoning(highlightDto, "Could not determine the number of wheels",
+          UNPROCESSABLE);
     }
-    return result;
   }
 
   @Override

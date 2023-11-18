@@ -56,8 +56,8 @@ databaseChangeLog:
 #                  constraints:
 #                    nullable: false
               - column:
-                  name: listing_types
-                  type: ebay_listing_type[]
+                  name: buying_options
+                  type: ebay_buying_option[]
                   constraints:
                     nullable: false
               - column:

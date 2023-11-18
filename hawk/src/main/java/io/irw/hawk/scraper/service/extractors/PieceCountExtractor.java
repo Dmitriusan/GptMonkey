@@ -1,9 +1,9 @@
 package io.irw.hawk.scraper.service.extractors;
 
 import com.ebay.buy.browse.model.ItemSummary;
+import io.irw.hawk.dto.ebay.EbayHighlightDto;
 import io.irw.hawk.dto.merchandise.GroupEnum;
 import io.irw.hawk.dto.merchandise.ProductVariantEnum;
-import io.irw.hawk.scraper.model.MerchandiseMetadataDto;
 import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ public class PieceCountExtractor implements ItemSummaryDataExtractor {
   }
 
   @Override
-  public void extractDataFromItemSummary(ItemSummary itemSummary, MerchandiseMetadataDto metadata) {
-    metadata.getEbayFindingDto().setNumberOfPieces(Optional.of(1));
+  public void extractDataFromItemSummary(ItemSummary itemSummary, EbayHighlightDto highlightDto) {
+    highlightDto.getEbayFinding().setNumberOfPieces(Optional.of(1));
   }
 }

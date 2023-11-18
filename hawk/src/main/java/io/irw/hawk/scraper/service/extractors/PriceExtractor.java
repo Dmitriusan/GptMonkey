@@ -1,12 +1,12 @@
 package io.irw.hawk.scraper.service.extractors;
 
-import static io.irw.hawk.dto.ebay.EbayListingTypeEnum.AUCTION;
-import static io.irw.hawk.dto.ebay.EbayListingTypeEnum.FIXED_PRICE;
+import static io.irw.hawk.dto.ebay.EbayBuyingOptionEnum.AUCTION;
+import static io.irw.hawk.dto.ebay.EbayBuyingOptionEnum.FIXED_PRICE;
 
 import com.ebay.buy.browse.model.ItemSummary;
 import io.irw.hawk.dto.ebay.EbayFindingDto;
 import io.irw.hawk.dto.merchandise.ProductVariantEnum;
-import io.irw.hawk.scraper.model.MerchandiseMetadataDto;
+import io.irw.hawk.dto.ebay.EbayHighlightDto;
 import io.irw.hawk.scraper.model.ProcessingPipelineStep;
 import io.irw.hawk.scraper.service.matchers.ShippingPossibilitiesMatcher;
 import java.math.BigDecimal;
@@ -38,10 +38,10 @@ public class PriceExtractor implements ItemSummaryDataExtractor {
   }
 
   @Override
-  public void extractDataFromItemSummary(ItemSummary itemSummary, MerchandiseMetadataDto metadata) {
-    EbayFindingDto ebayFindingDto = metadata.getEbayFindingDto();
+  public void extractDataFromItemSummary(ItemSummary itemSummary, EbayHighlightDto highlightDto) {
+    EbayFindingDto ebayFindingDto = highlightDto.getEbayFinding();
 
-    if (ebayFindingDto.getListingTypes().contains(AUCTION)) {
+    if (ebayFindingDto.getBuyingOptions().contains(AUCTION)) {
       var priceValue = BigDecimal.valueOf(Double.parseDouble(itemSummary.getCurrentBidPrice().getValue()));
       ebayFindingDto.setCurrentAuctionPriceUsd(Optional.of(priceValue));
 
@@ -50,7 +50,7 @@ public class PriceExtractor implements ItemSummaryDataExtractor {
               .map(shippingCost -> calculatePricePerPieceWithShipping(priceValue, pieces, shippingCost))));
     }
 
-    if(itemSummary.getBuyingOptions().contains(FIXED_PRICE)) {
+    if(ebayFindingDto.getBuyingOptions().contains(FIXED_PRICE)) {
       var priceValue = BigDecimal.valueOf(Double.parseDouble(itemSummary.getPrice().getValue()));
       ebayFindingDto.setBuyItNowPriceUsd(Optional.of(priceValue));
       

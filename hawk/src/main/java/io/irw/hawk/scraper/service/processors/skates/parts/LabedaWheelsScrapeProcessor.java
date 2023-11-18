@@ -10,7 +10,6 @@ import io.irw.hawk.integration.ebay.buy.browse.ItemSummarySearchParameterDto;
 import io.irw.hawk.scraper.service.processors.ProductScrapeProcessor;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;

@@ -5,10 +5,9 @@ import static org.apache.commons.lang3.StringUtils.defaultString;
 import static org.apache.commons.lang3.StringUtils.lowerCase;
 
 import com.ebay.buy.browse.model.ItemSummary;
+import io.irw.hawk.dto.ebay.EbayHighlightDto;
 import io.irw.hawk.dto.merchandise.GroupEnum;
 import io.irw.hawk.dto.merchandise.ProductVariantEnum;
-import io.irw.hawk.scraper.ai.AIEnhanced;
-import io.irw.hawk.scraper.model.MerchandiseMetadataDto;
 import io.irw.hawk.scraper.model.ProcessingPipelineStep;
 import io.irw.hawk.scraper.service.extractors.ItemSummaryDataExtractor;
 import io.irw.hawk.scraper.service.extractors.PriceExtractor;
@@ -41,7 +40,7 @@ public class WheelCountExtractor implements ItemSummaryDataExtractor {
   }
 
   @Override
-  public void extractDataFromItemSummary(ItemSummary itemSummary, MerchandiseMetadataDto metadata) {
+  public void extractDataFromItemSummary(ItemSummary itemSummary, EbayHighlightDto highlightDto) {
     String title = itemSummary.getTitle();
     String shortDescription = itemSummary.getShortDescription();
 
@@ -55,7 +54,7 @@ public class WheelCountExtractor implements ItemSummaryDataExtractor {
 
     // TODO: default pack by wheel size (4/8 for 80mm)
     // TODO: match by price
-    metadata.getEbayFindingDto().setNumberOfPieces(numberOfWheels);
+    highlightDto.getEbayFinding().setNumberOfPieces(numberOfWheels);
   }
 
   protected static Optional<Integer> extractNumberOfWheelsFromText(String titleWithMixedCase, String shortDescriptionWithMixedCase) {

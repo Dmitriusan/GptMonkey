@@ -1,6 +1,9 @@
 package io.irw.hawk.entity;
 
-import io.irw.hawk.scraper.model.MerchandiseVerdictType;
+import io.hypersistence.utils.hibernate.type.basic.PostgreSQLEnumType;
+import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
+import io.irw.hawk.dto.merchandise.MerchandiseVerdictType;
+import io.irw.hawk.scraper.model.ProcessingPipelineMetadata;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -15,6 +18,7 @@ import jakarta.persistence.Table;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
 
 /**
  * Items that were found and not filtered out during the scrape run. There was some reasoning and resolution about
@@ -46,8 +50,13 @@ public class EbayHighlight {
   @EqualsAndHashCode.Include
   EbayFinding ebayFinding;
 
+  @Type(JsonBinaryType.class)
+  @Column(name= "pipeline_metadata", columnDefinition = "jsonb", nullable = false)
+  private ProcessingPipelineMetadata pipelineMetadata;
+
   @Enumerated(EnumType.STRING)
-  @Column(name = "final_verdict", columnDefinition = "merchandise_verdict_type")
+  @Column(name = "final_verdict", columnDefinition = "merchandise_verdict_type", nullable = false)
+  @Type(PostgreSQLEnumType.class)
   MerchandiseVerdictType finalVerdict;
 
 }
