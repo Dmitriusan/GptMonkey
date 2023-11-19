@@ -11,6 +11,11 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+      hypersistence:
+        utils:
+          jackson:
+            object:
+              mapper: "io.irw.hawk.entity.type.CustomObjectMapperSupplier"
   datasource:
     url: ${hawk.db.url}
     username: ${hawk.db.username}
@@ -26,8 +31,4 @@ logging:
       springframework: INFO
       springframework.web.client.RestTemplate: TRACE
 
-hypersistence:
-  utils:
-    jackson:
-      object:
-        mapper: io.irw.hawk.entity.type.CustomObjectMapperSupplier
+jpa:
