@@ -55,7 +55,7 @@ public class LabedaWheelsInterestMatcher implements ItemSummaryMatcher {
       List<MerchandiseReasoningLog> reasonings = checkPricePerPiece(highlightDto,
           currentAucPricePerPieceWithShippingUsd.get());
       reasonings.forEach(reasoning -> highlightDto.getPipelineMetadata().addReasoning(reasoning));
-    } else if(itemSummary.getBuyingOptions().contains(FIXED_PRICE)) {
+    } else if(ebayFindingDto.getBuyingOptions().contains(FIXED_PRICE)) {
       var buyNowPricePerPieceWithShippingUsd = ebayFindingDto.getBuyNowPricePerPieceWithShippingUsd();
       List<MerchandiseReasoningLog> reasonings = checkPricePerPiece(highlightDto, buyNowPricePerPieceWithShippingUsd.get());
       reasonings.forEach(reasoning -> highlightDto.getPipelineMetadata().addReasoning(reasoning));

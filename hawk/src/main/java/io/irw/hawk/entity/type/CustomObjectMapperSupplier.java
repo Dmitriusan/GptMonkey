@@ -7,6 +7,9 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.util.StdDateFormat;
 import io.hypersistence.utils.hibernate.type.util.ObjectMapperSupplier;
 
+/**
+ * @see <a href="https://vladmihalcea.com/hibernate-types-customize-jackson-objectmapper/"/a>
+ */
 public class CustomObjectMapperSupplier
     implements ObjectMapperSupplier {
 

@@ -39,25 +39,15 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
+                  name: reasoning_summary
+                  type: VARCHAR(255)  # Adjust the data type and length as needed
+                  constraints:
+                    nullable: false
+              - column:
                   name: final_verdict
                   type: merchandise_verdict_type
                   constraints:
                     nullable: false
-
-        # Adding foreign key constraints
-        - addForeignKeyConstraint:
-            baseColumnNames: run_id
-            baseTableName: ebay_highlight
-            baseTableSchemaName: merchandise_db
-            constraintName: FK_EBAY_HIGHLIGHT_ON_SCRAPE_RUN
-            referencedColumnNames: id
-            referencedTableName: hawk_scrape_run
-            referencedTableSchemaName: merchandise_db
-        - addForeignKeyConstraint:
-            baseColumnNames: ebay_finding_id
-            baseTableName: ebay_highlight
-            baseTableSchemaName: merchandise_db
-            constraintName: FK_EBAY_HIGHLIGHT_ON_EBAY_FINDING
-            referencedColumnNames: id
-            referencedTableName: ebay_finding
-            referencedTableSchemaName: merchandise_db
+              - column:
+                  name: human_verdict
+                  type: merchandise_verdict_type

@@ -4,6 +4,8 @@ import io.irw.hawk.dto.ebay.EbayFindingDto;
 import io.irw.hawk.dto.ebay.EbayHighlightDto;
 import io.irw.hawk.dto.merchandise.HawkScrapeRunDto;
 import io.irw.hawk.entity.EbayHighlight;
+import io.irw.hawk.scraper.model.ProcessingPipelineMetadata;
+import java.util.stream.Collectors;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -19,8 +21,18 @@ public interface EbayHighlightMapper {
   EbayHighlightDto fromRuntime(HawkScrapeRunDto hawkScrapeRunDto,
       EbayFindingDto ebayFindingDto, EbayHighlightDto ebayHighlightDto);
 
+  @Mapping(target = "reasoningSummary", expression = "java(getReasoningSummary(ebayHighlightDto))")
   EbayHighlight toEntity(EbayHighlightDto ebayHighlightDto);
 
   EbayHighlightDto toDto(EbayHighlight ebayHighlight);
 
+  default String getReasoningSummary(EbayHighlightDto ebayHighlightDto) {
+    return ebayHighlightDto.getPipelineMetadata()
+        .filterReasoningsFromLog()
+        .stream()
+        .map(merchandiseReasoningLog ->
+            "%s %s".formatted(merchandiseReasoningLog.getVerdict(), merchandiseReasoningLog.getReason())
+        )
+        .collect(Collectors.joining("\n"));
+  }
 }

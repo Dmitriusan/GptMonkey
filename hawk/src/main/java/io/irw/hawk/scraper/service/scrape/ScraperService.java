@@ -174,13 +174,13 @@ public class ScraperService {
   }
 
   private static void updateMerchandiseVerdict(EbayHighlightDto highlightDto) {
-    MerchandiseVerdictType verdict = highlightDto.getPipelineMetadata().filterReasoningsFromLog()
+    highlightDto.getPipelineMetadata()
+        .filterReasoningsFromLog()
         .stream()
         .min(Comparator.comparing(merchandiseReasoningDto -> merchandiseReasoningDto.getVerdict()
             .ordinal()))
         .map(MerchandiseReasoningLog::getVerdict)
-        .orElse(MerchandiseVerdictType.BUYING_OPPORTUNITY);
-    highlightDto.setFinalVerdict(verdict);
+        .ifPresent(highlightDto::setFinalVerdict);
   }
 
 }

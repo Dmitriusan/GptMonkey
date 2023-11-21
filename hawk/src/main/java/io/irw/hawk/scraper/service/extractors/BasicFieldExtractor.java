@@ -1,5 +1,8 @@
 package io.irw.hawk.scraper.service.extractors;
 
+import static io.irw.hawk.dto.ebay.EbayBuyingOptionEnum.AUCTION;
+import static io.irw.hawk.dto.ebay.EbayBuyingOptionEnum.BEST_OFFER;
+import static io.irw.hawk.dto.ebay.EbayBuyingOptionEnum.FIXED_PRICE;
 import static io.irw.hawk.dto.ebay.EbayListingStatusEnum.ACTIVE;
 
 import com.ebay.buy.browse.model.Image;
@@ -34,7 +37,7 @@ public class BasicFieldExtractor implements ItemSummaryDataExtractor {
     ebayFindingDto.setListingStatus(ACTIVE);
     extractListingType(itemSummary, ebayFindingDto);
     extractAllImages(itemSummary, ebayFindingDto);
-    if (ebayFindingDto.getBuyingOptions().contains(EbayBuyingOptionEnum.AUCTION)) {
+    if (ebayFindingDto.getBuyingOptions().contains(AUCTION)) {
       ebayFindingDto.setBidCount(Optional.of(itemSummary.getBidCount()));
     }
   }
@@ -44,22 +47,22 @@ public class BasicFieldExtractor implements ItemSummaryDataExtractor {
         .orElse(List.of());
     List<String> allImageUrls = Stream.concat(
             Stream.of(itemSummary.getImage()), additionalImages.stream())
-        .map(image -> image.getImageUrl())
+        .map(Image::getImageUrl)
         .toList();
     ebayFindingDto.setImageUrls(allImageUrls);
   }
 
   private static void extractListingType(ItemSummary itemSummary, EbayFindingDto ebayFindingDto) {
-    if (itemSummary.getBuyingOptions().contains("AUCTION")) {
-      ebayFindingDto.getBuyingOptions().add(EbayBuyingOptionEnum.AUCTION);
+    if (itemSummary.getBuyingOptions().contains("AUCTION") && ! ebayFindingDto.getBuyingOptions().contains(AUCTION)) {
+      ebayFindingDto.getBuyingOptions().add(AUCTION);
     }
 
-    if (itemSummary.getBuyingOptions().contains("BEST_OFFER")) {
-      ebayFindingDto.getBuyingOptions().add(EbayBuyingOptionEnum.BEST_OFFER);
+    if (itemSummary.getBuyingOptions().contains("BEST_OFFER") && ! ebayFindingDto.getBuyingOptions().contains(BEST_OFFER)) {
+      ebayFindingDto.getBuyingOptions().add(BEST_OFFER);
     }
 
-    if(itemSummary.getBuyingOptions().contains("FIXED_PRICE")) {
-      ebayFindingDto.getBuyingOptions().add(EbayBuyingOptionEnum.FIXED_PRICE);
+    if(itemSummary.getBuyingOptions().contains("FIXED_PRICE") && ! ebayFindingDto.getBuyingOptions().contains(FIXED_PRICE)) {
+      ebayFindingDto.getBuyingOptions().add(FIXED_PRICE);
     }
   }
 

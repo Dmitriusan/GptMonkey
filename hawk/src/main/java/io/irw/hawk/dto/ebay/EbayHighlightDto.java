@@ -22,6 +22,7 @@ public class EbayHighlightDto {
   EbayFindingDto ebayFinding;
   ProcessingPipelineMetadata pipelineMetadata;
   MerchandiseVerdictType finalVerdict;
+  MerchandiseVerdictType humanVerdict;
 
 
 }

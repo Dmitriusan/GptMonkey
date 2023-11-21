@@ -52,11 +52,19 @@ public class EbayHighlight {
 
   @Type(JsonBinaryType.class)
   @Column(name= "pipeline_metadata", columnDefinition = "jsonb", nullable = false)
-  private ProcessingPipelineMetadata pipelineMetadata;
+  ProcessingPipelineMetadata pipelineMetadata;
+
+  @Column(name= "reasoning_summary", nullable = false)
+  String reasoningSummary;
 
   @Enumerated(EnumType.STRING)
   @Column(name = "final_verdict", columnDefinition = "merchandise_verdict_type", nullable = false)
   @Type(PostgreSQLEnumType.class)
   MerchandiseVerdictType finalVerdict;
+
+  @Enumerated(EnumType.STRING)
+  @Column(name = "human_verdict", columnDefinition = "merchandise_verdict_type")
+  @Type(PostgreSQLEnumType.class)
+  MerchandiseVerdictType humanVerdict;
 
 }

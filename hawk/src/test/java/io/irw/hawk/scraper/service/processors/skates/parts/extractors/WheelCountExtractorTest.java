@@ -11,6 +11,11 @@ class WheelCountExtractorTest {
   @Test
   public void testExtractNumberOfWheelsFromText() {
     // Test cases with known numbers of wheels
+    assertEquals(Optional.of(1), extractNumberOfWheelsFromText(
+        "Labeda Single Wheel RPG X-Soft RED Inline Indoor Hockey~72MM~76MM~80MM~~~~ 74A",
+        ""
+    ));
+
     assertEquals(Optional.of(4), extractNumberOfWheelsFromText(
         "Labeda Gripper Ref Roller Hockey Inline Wheels 80mm X-SOFT 4 Pack NEW IN PACKAGE",
         ""
