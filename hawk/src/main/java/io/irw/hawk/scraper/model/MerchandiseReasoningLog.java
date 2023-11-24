@@ -17,7 +17,6 @@ import lombok.experimental.SuperBuilder;
 @JsonTypeName("merchandiseReasoning")
 public class MerchandiseReasoningLog extends PipelineStepLog {
 
-  String reasoningMatcher;
   MerchandiseVerdictType verdict;
   String reason;
 

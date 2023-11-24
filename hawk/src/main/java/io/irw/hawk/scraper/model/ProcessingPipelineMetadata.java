@@ -39,7 +39,8 @@ public class ProcessingPipelineMetadata {
   }
 
   public List<MerchandiseReasoningLog> filterReasoningsFromLog() { //retrieve from logs by instanceof
-    return getLastPipelineStep().getLog().stream()
+    return pipelineStepMetadata.stream()
+        .flatMap(step -> step.getLog().stream())
         .filter(MerchandiseReasoningLog.class::isInstance)
         .map(MerchandiseReasoningLog.class::cast)
         .toList();
