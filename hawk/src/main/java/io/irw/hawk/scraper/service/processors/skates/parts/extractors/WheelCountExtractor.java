@@ -35,14 +35,16 @@ public class WheelCountExtractor implements ItemSummaryDataExtractor {
   }
 
   @Override
-  public boolean isApplicableTo(ProductVariantEnum productVariant) {
-    return productVariant.getGroup().equals(GroupEnum.WHEELS);
+  public boolean isApplicableTo(EbayHighlightDto highlightDto) {
+    return extractProductGroup(highlightDto).equals(GroupEnum.WHEELS);
   }
 
   @Override
-  public void extractDataFromItemSummary(ItemSummary itemSummary, EbayHighlightDto highlightDto) {
-    String title = itemSummary.getTitle();
-    String shortDescription = itemSummary.getShortDescription();
+  public void extractDataFromItem(ItemSummary itemSummary, EbayHighlightDto highlightDto) {
+    String title = highlightDto.getEbayFinding().getTitle().toLowerCase();
+    String shortDescription = lowerCase(highlightDto.getEbayFinding()
+        .getItemDescription()
+        .orElse(""));
 
     var numberOfWheels = extractNumberOfWheelsFromText(title, shortDescription);
     //.or();

@@ -3,7 +3,9 @@ package io.irw.hawk.scraper.model;
 import static java.util.stream.Collectors.toMap;
 
 import io.irw.hawk.dto.ebay.EbayHighlightDto;
+import io.irw.hawk.dto.merchandise.GroupEnum;
 import io.irw.hawk.dto.merchandise.MerchandiseVerdictType;
+import io.irw.hawk.dto.merchandise.ProductVariantEnum;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -85,5 +87,15 @@ public interface ProcessingPipelineStep extends Comparable<ProcessingPipelineSte
   default void addLogStatement(EbayHighlightDto highlightDto, String message) {
     highlightDto.getPipelineMetadata()
         .addLog(message);
+  }
+
+  default ProductVariantEnum extractProductVariant(EbayHighlightDto highlightDto) {
+    return highlightDto.getRun()
+        .getProductVariant();
+  }
+
+  default GroupEnum extractProductGroup(EbayHighlightDto highlightDto) {
+    return extractProductVariant(highlightDto)
+        .getGroup();
   }
 }

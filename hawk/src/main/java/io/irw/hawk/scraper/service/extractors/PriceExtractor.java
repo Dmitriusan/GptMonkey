@@ -33,12 +33,12 @@ public class PriceExtractor implements ItemSummaryDataExtractor {
   }
 
   @Override
-  public boolean isApplicableTo(ProductVariantEnum productVariant) {
+  public boolean isApplicableTo(EbayHighlightDto highlightDto) {
     return true;
   }
 
   @Override
-  public void extractDataFromItemSummary(ItemSummary itemSummary, EbayHighlightDto highlightDto) {
+  public void extractDataFromItem(ItemSummary itemSummary, EbayHighlightDto highlightDto) {
     EbayFindingDto ebayFindingDto = highlightDto.getEbayFinding();
 
     if (ebayFindingDto.getBuyingOptions().contains(AUCTION)) {

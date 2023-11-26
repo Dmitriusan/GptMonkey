@@ -8,6 +8,7 @@ import io.irw.hawk.dto.ebay.EbayHighlightDto;
 import io.irw.hawk.scraper.model.ProcessingPipelineStep;
 import io.irw.hawk.scraper.service.matchers.BaselineItemDataMatcher;
 import io.irw.hawk.scraper.service.matchers.ItemSummaryMatcher;
+import io.irw.hawk.scraper.service.processors.skates.parts.extractors.AiWheelCountExtractor;
 import io.irw.hawk.scraper.service.processors.skates.parts.extractors.WheelCountExtractor;
 import java.util.List;
 import lombok.AccessLevel;
@@ -24,7 +25,7 @@ public class WheelCountMatcher implements ItemSummaryMatcher {
 
   @Override
   public List<Class<? extends ProcessingPipelineStep>> dependsOn() {
-    return List.of(WheelCountExtractor.class);
+    return List.of(WheelCountExtractor.class, AiWheelCountExtractor.class);
   }
 
   @Override

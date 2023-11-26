@@ -147,7 +147,7 @@ public class ScraperService {
     log.trace("Running extractor: {}", itemSummaryDataExtractor.getClass()
         .getSimpleName());
     if (itemSummaryDataExtractor.isApplicableTo(targetProductVariant)) {
-      itemSummaryDataExtractor.extractDataFromItemSummary(itemSummary, highlightDto);
+      itemSummaryDataExtractor.extractDataFromItem(itemSummary, highlightDto);
     }
   }
 

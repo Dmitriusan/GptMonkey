@@ -19,12 +19,12 @@ import org.springframework.stereotype.Service;
 public class ShippingCostExtractor implements ItemSummaryDataExtractor {
 
   @Override
-  public boolean isApplicableTo(ProductVariantEnum productVariant) {
+  public boolean isApplicableTo(EbayHighlightDto highlightDto) {
     return true;
   }
 
   @Override
-  public void extractDataFromItemSummary(ItemSummary itemSummary, EbayHighlightDto highlightDto) {
+  public void extractDataFromItem(ItemSummary itemSummary, EbayHighlightDto highlightDto) {
     Optional<BigDecimal> minShippingCost = Optional.ofNullable(itemSummary.getShippingOptions())
         .flatMap(shippingOptions -> shippingOptions.stream()
           .filter(

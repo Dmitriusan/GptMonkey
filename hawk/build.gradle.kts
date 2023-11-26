@@ -74,6 +74,8 @@ dependencies {
 	implementation("org.openapitools:jackson-databind-nullable:0.2.6")
 	implementation("com.ebay.auth:ebay-oauth-java-client:1.1.8")
 	implementation("org.jgrapht:jgrapht-core:1.5.2")
+
+	implementation("com.theokanning.openai-gpt3-java:service:0.18.2")
 }
 
 dependencyManagement {

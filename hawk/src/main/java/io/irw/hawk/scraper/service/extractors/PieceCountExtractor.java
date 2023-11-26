@@ -18,12 +18,12 @@ import org.springframework.stereotype.Service;
 public class PieceCountExtractor implements ItemSummaryDataExtractor {
 
   @Override
-  public boolean isApplicableTo(ProductVariantEnum productVariant) {
-    return ! productVariant.getGroup().equals(GroupEnum.WHEELS);
+  public boolean isApplicableTo(EbayHighlightDto highlightDto) {
+    return ! extractProductGroup(highlightDto).equals(GroupEnum.WHEELS);
   }
 
   @Override
-  public void extractDataFromItemSummary(ItemSummary itemSummary, EbayHighlightDto highlightDto) {
+  public void extractDataFromItem(ItemSummary itemSummary, EbayHighlightDto highlightDto) {
     highlightDto.getEbayFinding().setNumberOfPieces(Optional.of(1));
   }
 }
