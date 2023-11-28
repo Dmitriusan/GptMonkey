@@ -107,7 +107,7 @@ public class ScraperService {
           break;
         }
       } else if (pipelineStep instanceof ItemSummaryDataExtractor itemSummaryDataExtractor) {
-        applyDataExtractor(targetProductVariant, itemSummary, itemSummaryDataExtractor, highlightDto);
+        applyDataExtractor(itemSummary, itemSummaryDataExtractor, highlightDto);
       } else {
         throw new IllegalStateException("Unknown pipeline step: " + pipelineStep);
       }
@@ -142,11 +142,11 @@ public class ScraperService {
         .orElseGet(() -> ebayFindingMapper.itemSummaryToEbayFindingDto(itemSummary, ebaySellerDto));
   }
 
-  private static void applyDataExtractor(ProductVariantEnum targetProductVariant, ItemSummary itemSummary,
+  private static void applyDataExtractor(ItemSummary itemSummary,
       ItemSummaryDataExtractor itemSummaryDataExtractor, EbayHighlightDto highlightDto) {
     log.trace("Running extractor: {}", itemSummaryDataExtractor.getClass()
         .getSimpleName());
-    if (itemSummaryDataExtractor.isApplicableTo(targetProductVariant)) {
+    if (itemSummaryDataExtractor.isApplicableTo(highlightDto)) {
       itemSummaryDataExtractor.extractDataFromItem(itemSummary, highlightDto);
     }
   }

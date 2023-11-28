@@ -1,9 +1,11 @@
 package io.irw.hawk.scraper.service.openai;
 
-import com.theokanning.openai.completion.CompletionRequest;
-import com.theokanning.openai.completion.chat.ChatCompletionRequest;
+import com.theokanning.openai.completion.chat.ChatCompletionResult;
+import com.theokanning.openai.completion.chat.ChatFunctionCall;
+import com.theokanning.openai.completion.chat.ChatMessage;
 import com.theokanning.openai.service.OpenAiService;
 import io.irw.hawk.scraper.ai.LlmQuery;
+import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -18,27 +20,23 @@ public class LlmQueryService {
 
   OpenAiProperties openAiProperties;
 
-  public void chatCompletion(LlmQuery llmQuery) {
+  public void functionCall(LlmQuery llmQuery) {
     OpenAiService service = new OpenAiService(openAiProperties.getToken());
-    CompletionRequest completionRequest = CompletionRequest.builder()
-        .prompt(llmQuery.getPrompt())
-        .model(llmQuery.getModel().getName())
-        .echo(false)
-        .build();
-
     // TODO: return the result
-    service.createCompletion(completionRequest).getChoices().forEach(System.out::println);
-  }
+    ChatCompletionResult chatCompletion = service.createChatCompletion(llmQuery.getChatCompletionRequest());
 
-  public void function(LlmQuery llmQuery) {
-    OpenAiService service = new OpenAiService(openAiProperties.getToken());
-    ChatCompletionRequest completionRequest = ChatCompletionRequest.builder()
-        .messages(llmQuery.getPrompt())
-        .model(llmQuery.getModel().getName())
-        .echo(false)
-        .build();
-    service.createChatCompletion(completionRequest).getChoices().forEach(System.out::println);
-    // TODO: return the result
+    // TODO: handle incomplete response, 0 responses, not function call etc
+    ChatFunctionCall functionCall = chatCompletion.getChoices()
+        .get(0)
+        .getMessage()
+        .getFunctionCall();
+    if (functionCall != null) {
+      log.info("Function call: {} with args {}", functionCall.getName(), functionCall.getArguments());
+      Optional<ChatMessage> message = llmQuery.getFunctionExecutor()
+          .executeAndConvertToMessageSafely(functionCall);
+      if (message.isEmpty()) {
+        log.warn("Something went wrong with the execution of " + functionCall.getName() + "...");
+      }
+    }
   }
-
 }

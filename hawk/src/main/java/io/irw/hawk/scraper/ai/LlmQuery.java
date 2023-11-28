@@ -1,6 +1,9 @@
 package io.irw.hawk.scraper.ai;
 
+import com.theokanning.openai.completion.chat.ChatCompletionRequest;
+import com.theokanning.openai.completion.chat.ChatCompletionRequest.ChatCompletionRequestBuilder;
 import com.theokanning.openai.completion.chat.ChatMessage;
+import com.theokanning.openai.service.FunctionExecutor;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,10 +15,8 @@ import lombok.Value;
 @Builder
 public class LlmQuery {
 
-  List<ChatMessage> messages;
-
-  @Default
-  OpenAiModel model = OpenAiModel.GPT_3_5_TURBO;
+  ChatCompletionRequest chatCompletionRequest;
+  FunctionExecutor functionExecutor;
 
   @Getter
   @AllArgsConstructor
@@ -26,6 +27,12 @@ public class LlmQuery {
 
     private String name;
 
+  }
+
+  public static ChatCompletionRequestBuilder getGpt35Builder() {
+    return ChatCompletionRequest.builder()
+        .model(OpenAiModel.GPT_3_5_TURBO.getName())
+        .n(1);
   }
 
 }
