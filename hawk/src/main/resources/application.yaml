@@ -22,6 +22,9 @@ spring:
     password: ${hawk.db.password}
 logging:
   level:
+    com:
+      theokanning:
+        openai: TRACE
     io:
       irw:
         hawk: DEBUG

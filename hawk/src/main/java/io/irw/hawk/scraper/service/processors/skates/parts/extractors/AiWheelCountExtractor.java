@@ -19,6 +19,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import lombok.experimental.FieldDefaults;
@@ -59,6 +63,11 @@ public class AiWheelCountExtractor extends WheelCountExtractor {
         .description("Store the number of wheels as determined from item listing description")
         .executor(AiWheelCountCallbackRequest.class, request -> {
           numberOfWheels.set(Optional.ofNullable(request.getNumberOfWheels()));
+          if (numberOfWheels.get().isPresent()) {
+            addLogStatement(highlightDto,
+                "The number of wheels %s was determined by LLM from excerpt '%s'".formatted(numberOfWheels.get().get(),
+                request.getExcerpt()));
+          }
           return new AiWheelCountCallbackResponse("ok");
         })
         .build()));
@@ -69,7 +78,7 @@ public class AiWheelCountExtractor extends WheelCountExtractor {
             .messages(List.of(new ChatMessage(ChatMessageRole.SYSTEM.value(), HOW_MANY_WHEELS_ARE_THERE),
                 new ChatMessage(ChatMessageRole.USER.value(), title + "\n" + shortDescription)))
             .functions(functionExecutor.getFunctions())
-            .functionCall(ChatCompletionRequestFunctionCall.of("{\"name\": \"store_number_of_wheels\"}"))
+            .functionCall(ChatCompletionRequestFunctionCall.of("store_number_of_wheels"))
             .build())
         .build());
 
@@ -77,7 +86,8 @@ public class AiWheelCountExtractor extends WheelCountExtractor {
         .setNumberOfPieces(numberOfWheels.get());
   }
 
-  @Value
+  @Data
+  @NoArgsConstructor
   public static class AiWheelCountCallbackRequest {
     @JsonPropertyDescription("Relevant fragment of the listing description that specifies the number of wheels")
     @JsonProperty(required = true)
