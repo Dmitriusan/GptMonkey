@@ -44,7 +44,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: final_verdict
+                  name: aggregated_verdict
                   type: merchandise_verdict_type
                   constraints:
                     nullable: false

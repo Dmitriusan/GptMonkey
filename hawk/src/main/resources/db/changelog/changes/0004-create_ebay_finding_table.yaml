@@ -81,7 +81,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: item_description
-                  type: VARCHAR
+                  type: VARCHAR(10000)
               - column:
                   name: number_of_pieces
                   type: INTEGER

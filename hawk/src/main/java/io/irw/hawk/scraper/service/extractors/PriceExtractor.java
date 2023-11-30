@@ -5,7 +5,6 @@ import static io.irw.hawk.dto.ebay.EbayBuyingOptionEnum.FIXED_PRICE;
 
 import com.ebay.buy.browse.model.ItemSummary;
 import io.irw.hawk.dto.ebay.EbayFindingDto;
-import io.irw.hawk.dto.merchandise.ProductVariantEnum;
 import io.irw.hawk.dto.ebay.EbayHighlightDto;
 import io.irw.hawk.scraper.model.ProcessingPipelineStep;
 import io.irw.hawk.scraper.service.matchers.ShippingPossibilitiesMatcher;
@@ -48,6 +47,11 @@ public class PriceExtractor implements ItemSummaryDataExtractor {
       ebayFindingDto.setCurrentAucPricePerPieceWithShippingUsd(ebayFindingDto.getNumberOfPieces()
           .flatMap(pieces -> ebayFindingDto.getMinShippingCostUsd()
               .map(shippingCost -> calculatePricePerPieceWithShipping(priceValue, pieces, shippingCost))));
+
+      addLogStatement(highlightDto,
+          "Given # of pieces: %s, the current auc price per piece with shipping is %s".formatted(
+              ebayFindingDto.getNumberOfPieces().map(String::valueOf).orElse("N/A"),
+              ebayFindingDto.getCurrentAucPricePerPieceWithShippingUsd().map(String::valueOf).orElse("N/A")));
     }
 
     if(ebayFindingDto.getBuyingOptions().contains(FIXED_PRICE)) {
@@ -57,6 +61,11 @@ public class PriceExtractor implements ItemSummaryDataExtractor {
       ebayFindingDto.setBuyNowPricePerPieceWithShippingUsd(ebayFindingDto.getNumberOfPieces()
           .flatMap(pieces -> ebayFindingDto.getMinShippingCostUsd()
               .map(shippingCost -> calculatePricePerPieceWithShipping(priceValue, pieces, shippingCost))));
+
+      addLogStatement(highlightDto,
+          "Given # of pieces: %s, the current \"buy it now\" price per piece with shipping is %s".formatted(
+              ebayFindingDto.getNumberOfPieces().map(String::valueOf).orElse("N/A"),
+              ebayFindingDto.getBuyNowPricePerPieceWithShippingUsd().map(String::valueOf).orElse("N/A")));
     }
   }
 

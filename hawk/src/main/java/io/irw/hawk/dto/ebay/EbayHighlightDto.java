@@ -21,8 +21,8 @@ public class EbayHighlightDto {
   HawkScrapeRunDto run;
   EbayFindingDto ebayFinding;
   ProcessingPipelineMetadata pipelineMetadata;
-  MerchandiseVerdictType finalVerdict;
+  MerchandiseVerdictType aggregatedVerdict;
   MerchandiseVerdictType humanVerdict;
-
+  Boolean newItem;
 
 }

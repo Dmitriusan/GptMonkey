@@ -1,5 +1,6 @@
 package io.irw.hawk.scraper.service.processors.skates.parts;
 
+import static io.irw.hawk.integration.ebay.buy.browse.ItemSummarySearchParameterDto.FIELD_GROUPS_EXTENDED_AND_MATCHING_ITEMS;
 import static io.irw.hawk.integration.ebay.model.EbayFilters.AUCTION_OR_BUY_NOW_OR_FIXED_PRICE;
 import static io.irw.hawk.integration.ebay.model.EbayFilters.priceMax;
 
@@ -41,6 +42,7 @@ public class LabedaWheelsScrapeProcessor implements ProductScrapeProcessor {
         .searchParams(ItemSummarySearchParameterDto.builder()
             .q("labeda wheels 80 mm")
             .filter(StringUtils.joinWith(",", AUCTION_OR_BUY_NOW_OR_FIXED_PRICE, priceMax(50)))
+            .fieldgroups(FIELD_GROUPS_EXTENDED_AND_MATCHING_ITEMS)
             .sort("price")
             .build())
         .build());

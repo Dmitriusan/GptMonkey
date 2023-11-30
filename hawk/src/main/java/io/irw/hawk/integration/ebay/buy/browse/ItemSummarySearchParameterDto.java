@@ -72,6 +72,8 @@ public class ItemSummarySearchParameterDto {
   @Builder.Default
   private String offset = "0";
 
+  public static final String FIELD_GROUPS_EXTENDED_AND_MATCHING_ITEMS ="EXTENDED,MATCHING_ITEMS";
+
   /**
    * array of SortField https://developer.ebay.com/api-docs/buy/browse/types/cos:SortField
    * https://developer.ebay.com/api-docs/buy/browse/resources/item_summary/methods/search

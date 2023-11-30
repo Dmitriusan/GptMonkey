@@ -41,7 +41,7 @@ public class LabedaWheelsInterestMatcher implements ItemSummaryMatcher {
 
   @Override
   public void match(ItemSummary itemSummary, EbayHighlightDto highlightDto) {
-    MerchandiseVerdictType finalVerdict = highlightDto.getFinalVerdict();
+    MerchandiseVerdictType finalVerdict = highlightDto.getAggregatedVerdict();
     if (! finalVerdict.isBuyable()) {
       highlightDto.getPipelineMetadata()
           .addLog("Skipping item as it is not buyable (status=%s)".formatted(finalVerdict));

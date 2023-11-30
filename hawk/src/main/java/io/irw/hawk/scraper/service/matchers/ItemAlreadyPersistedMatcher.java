@@ -21,9 +21,7 @@ import org.springframework.stereotype.Service;
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
-public class ItemAlreadyPersistedDataMatcher implements ItemSummaryMatcher {
-
-  EbayFindingService ebayFindingService;
+public class ItemAlreadyPersistedMatcher implements ItemSummaryMatcher {
 
   @Override
   public List<Class<? extends ProcessingPipelineStep>> dependsOn() {
@@ -37,7 +35,7 @@ public class ItemAlreadyPersistedDataMatcher implements ItemSummaryMatcher {
 
   @Override
   public void match(ItemSummary itemSummary, EbayHighlightDto highlightDto) {
-    if (highlightDto.getEbayFinding().getId() != null) {
+    if (! highlightDto.getNewItem()) {
       log.debug("Skipping item {} as it is already present at the DB", itemSummary.getItemId());
       addNewReasoning(highlightDto, "Item %s is already present at the DB".formatted(itemSummary.getItemId()),
           MerchandiseVerdictType.ITEM_ALREADY_PERSISTED);

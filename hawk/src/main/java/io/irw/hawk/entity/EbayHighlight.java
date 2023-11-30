@@ -58,9 +58,9 @@ public class EbayHighlight {
   String reasoningSummary;
 
   @Enumerated(EnumType.STRING)
-  @Column(name = "final_verdict", columnDefinition = "merchandise_verdict_type", nullable = false)
+  @Column(name = "aggregated_verdict", columnDefinition = "merchandise_verdict_type", nullable = false)
   @Type(PostgreSQLEnumType.class)
-  MerchandiseVerdictType finalVerdict;
+  MerchandiseVerdictType aggregatedVerdict;
 
   @Enumerated(EnumType.STRING)
   @Column(name = "human_verdict", columnDefinition = "merchandise_verdict_type")

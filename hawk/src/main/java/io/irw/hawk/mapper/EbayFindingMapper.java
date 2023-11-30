@@ -26,6 +26,7 @@ public interface EbayFindingMapper {
   @Mapping(target = "legacyEbayIdStr", source = "itemSummary.legacyItemId")
   @Mapping(target = "seller", source = "ebaySellerDto")
   @Mapping(target = "title", source = "itemSummary.title")
+  @Mapping(target = "itemDescription", source = "itemSummary.shortDescription")
   @Mapping(target = "listingCreatedAt", source = "itemSummary.itemCreationDate")
   @Mapping(target = "webUrl", source = "itemSummary.itemWebUrl")
   @Mapping(target = "topRatedBuyingExperience", source = "itemSummary.topRatedBuyingExperience")

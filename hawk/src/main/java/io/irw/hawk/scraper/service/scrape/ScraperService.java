@@ -95,7 +95,7 @@ public class ScraperService {
         .run(hawkScrapeRunDto)
         .ebayFinding(getEbayFindingDto(itemSummary, ebaySellerDto))
         .pipelineMetadata(new ProcessingPipelineMetadata())
-        .finalVerdict(determineInitialVerdictBasedOnListingType(itemSummary))
+        .aggregatedVerdict(determineInitialVerdictBasedOnListingType(itemSummary))
         .build();
 
     for (ProcessingPipelineStep pipelineStep : linearExecutionGraphByDependencies(processingPipelineSteps)) {
@@ -103,7 +103,7 @@ public class ScraperService {
           .newStep(pipelineStep.getClass());
       if (pipelineStep instanceof ItemSummaryMatcher itemSummaryMatcher) {
         applyMatcher(targetProductVariant, itemSummary, itemSummaryMatcher, highlightDto);
-        if (highlightDto.getFinalVerdict() == MerchandiseVerdictType.ITEM_ALREADY_PERSISTED) {
+        if (highlightDto.getAggregatedVerdict() == MerchandiseVerdictType.ITEM_ALREADY_PERSISTED) {
           break;
         }
       } else if (pipelineStep instanceof ItemSummaryDataExtractor itemSummaryDataExtractor) {
@@ -180,7 +180,7 @@ public class ScraperService {
         .min(Comparator.comparing(merchandiseReasoningDto -> merchandiseReasoningDto.getVerdict()
             .ordinal()))
         .map(MerchandiseReasoningLog::getVerdict)
-        .ifPresent(highlightDto::setFinalVerdict);
+        .ifPresent(highlightDto::setAggregatedVerdict);
   }
 
 }

@@ -1,5 +1,6 @@
 package io.irw.hawk.scraper.model;
 
+import io.irw.hawk.dto.merchandise.MerchandiseVerdictType;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;

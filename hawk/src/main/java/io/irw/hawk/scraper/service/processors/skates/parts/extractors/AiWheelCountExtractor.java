@@ -13,14 +13,13 @@ import com.theokanning.openai.service.FunctionExecutor;
 import io.irw.hawk.dto.ebay.EbayHighlightDto;
 import io.irw.hawk.scraper.ai.LlmQuery;
 import io.irw.hawk.scraper.model.ProcessingPipelineStep;
+import io.irw.hawk.scraper.service.extractors.ItemIsAlreadyPersistedExtractor;
 import io.irw.hawk.scraper.service.openai.LlmQueryService;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -42,15 +41,18 @@ public class AiWheelCountExtractor extends WheelCountExtractor {
 
   @Override
   public List<Class<? extends ProcessingPipelineStep>> dependsOn() {
-    return List.of(WheelCountExtractor.class);
+    return List.of(WheelCountExtractor.class, ItemIsAlreadyPersistedExtractor.class);
+  }
+
+  @Override
+  public boolean isApplicableTo(EbayHighlightDto highlightDto) {
+    return super.isApplicableTo(highlightDto)
+        && highlightDto.getEbayFinding().getNumberOfPieces().isEmpty()
+        && highlightDto.getNewItem();
   }
 
   @Override
   public void extractDataFromItem(ItemSummary itemSummary, EbayHighlightDto highlightDto) {
-    if (highlightDto.getEbayFinding().getNumberOfPieces().isPresent()) {
-      return;
-    }
-
     String title = highlightDto.getEbayFinding().getTitle().toLowerCase();
     String shortDescription = lowerCase(highlightDto.getEbayFinding()
         .getItemDescription()
@@ -82,8 +84,16 @@ public class AiWheelCountExtractor extends WheelCountExtractor {
             .build())
         .build());
 
-    highlightDto.getEbayFinding()
-        .setNumberOfPieces(numberOfWheels.get());
+    if (numberOfWheels.get().isEmpty() || numberOfWheels.get().get() < 1 || numberOfWheels.get().get() > 16) {
+      String numberOfWheelsAsDetermined = numberOfWheels.get()
+          .map(String::valueOf)
+          .orElse("N/A");
+      addLogStatement(highlightDto, "Could not determine the number of wheels from the listing description. " +
+          "LLM returned %s".formatted(numberOfWheelsAsDetermined));
+    } else {
+      highlightDto.getEbayFinding()
+          .setNumberOfPieces(numberOfWheels.get());
+    }
   }
 
   @Data
