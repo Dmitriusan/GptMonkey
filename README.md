@@ -13,7 +13,10 @@ eBay is a great marketplace to apply LLM-based tools for scanning, as it is a ve
 environment that is not easy to navigate for a human, yet the prices are often well below the manufacturer's suggested
 retail price (MSRP) or recommended retail price (RRP). There are various challenges for auto-scans (like how many 
 inline skate wheels are being sold in a set? Or what is bundled within a lot?), so there is an idea in a backlog to use 
-machine vision to recognize some important aspects of a lot
+machine vision to recognize some important aspects of a lot.
+
+This project has been participating in [Backdrop Build hackathon](https://backdropbuild.com/v2/directory) (look for 
+GptMonkey demo video and usage instructions)
 
 # Batch vulnerability scanner
 The script splits source code files into chunks (trying to split between methods), uploads these files recursively to 
