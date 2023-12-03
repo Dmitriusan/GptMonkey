@@ -34,6 +34,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -57,6 +58,8 @@ public class ScraperService {
   EbaySellerService ebaySellerService;
   EbayFindingService ebayFindingService;
   EbayHighlightService ebayHighlightService;
+
+  ScrapeRunSummaryPrintingService scrapeRunSummaryPrintingService;
 
   private AtomicBoolean isScraping = new AtomicBoolean(false);
 
@@ -84,6 +87,7 @@ public class ScraperService {
         processItemSummary(targetProductVariant, itemSummary, hawkScrapeRunDto);
       }
     }
+    scrapeRunSummaryPrintingService.printScrapeRunSummary(hawkScrapeRunDto);
   }
 
   private void processItemSummary(ProductVariantEnum targetProductVariant, ItemSummary itemSummary,

@@ -24,7 +24,7 @@ class PriceExtractorTest {
         BigDecimal.valueOf(USUAL_PRICE_PER_PIECE_USD), NUMBER_OF_PIECES, BigDecimal.valueOf(MEEST_SH_OVERHEAD));
     double expectedProfitUsdValue = (USUAL_PRICE_PER_PIECE_USD * NUMBER_OF_PIECES
         - (LISTING_PRICE_PER_PIECE_USD + SHIPPING_PRICE_PER_PIECE_USD) * NUMBER_OF_PIECES) - MEEST_SH_OVERHEAD;
-    assertThat(calculatedProfitUsd.doubleValue()).isEqualTo(expectedProfitUsdValue, Offset.offset(DELTA));
+     assertThat(calculatedProfitUsd.doubleValue()).isEqualTo(expectedProfitUsdValue, Offset.offset(DELTA));
   }
 
   @Test
