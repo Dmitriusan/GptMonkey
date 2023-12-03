@@ -99,8 +99,6 @@ public class ScraperService {
         .build();
 
     for (ProcessingPipelineStep pipelineStep : linearExecutionGraphByDependencies(processingPipelineSteps)) {
-      highlightDto.getPipelineMetadata()
-          .newStep(pipelineStep.getClass());
       if (pipelineStep instanceof ItemSummaryMatcher itemSummaryMatcher) {
         applyMatcher(targetProductVariant, itemSummary, itemSummaryMatcher, highlightDto);
         if (highlightDto.getAggregatedVerdict() == MerchandiseVerdictType.ITEM_ALREADY_PERSISTED) {
@@ -144,17 +142,22 @@ public class ScraperService {
 
   private static void applyDataExtractor(ItemSummary itemSummary,
       ItemSummaryDataExtractor itemSummaryDataExtractor, EbayHighlightDto highlightDto) {
-    log.trace("Running extractor: {}", itemSummaryDataExtractor.getClass()
-        .getSimpleName());
     if (itemSummaryDataExtractor.isApplicableTo(highlightDto)) {
+      highlightDto.getPipelineMetadata()
+          .newStep(itemSummaryDataExtractor.getClass());
+      log.trace("Running extractor: {}", itemSummaryDataExtractor.getClass()
+          .getSimpleName());
       itemSummaryDataExtractor.extractDataFromItem(itemSummary, highlightDto);
     }
   }
 
   private static void applyMatcher(ProductVariantEnum targetProductVariant, ItemSummary itemSummary,
       ItemSummaryMatcher itemSummaryMatcher, EbayHighlightDto highlightDto) {
-    log.trace("Running matcher: {}", itemSummaryMatcher.getClass().getSimpleName());
+
     if (itemSummaryMatcher.isApplicableTo(targetProductVariant)) {
+      highlightDto.getPipelineMetadata()
+          .newStep(itemSummaryMatcher.getClass());
+      log.trace("Running matcher: {}", itemSummaryMatcher.getClass().getSimpleName());
       itemSummaryMatcher.match(itemSummary, highlightDto);
     }
     updateMerchandiseVerdict(highlightDto);

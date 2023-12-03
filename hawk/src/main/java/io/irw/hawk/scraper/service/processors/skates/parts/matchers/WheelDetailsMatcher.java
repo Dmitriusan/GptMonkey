@@ -35,34 +35,40 @@ public class WheelDetailsMatcher implements ItemSummaryMatcher {
   }
 
   @Override
+  public boolean isApplicableTo(ProductVariantEnum productVariant) {
+    return productVariant.equals(ProductVariantEnum.LABEDA_80_MM_WHEELS);
+  }
+
+  @Override
   public void match(ItemSummary itemSummary, EbayHighlightDto highlightDto) {
     String title = highlightDto.getEbayFinding().getTitle().toLowerCase();
     String shortDescription = lowerCase(highlightDto.getEbayFinding()
         .getItemDescription()
         .orElse(""));
+    String mergedTitleAndDescription = title + " "+ shortDescription;
+
     // Check for micro bearings
-    checkForMicrobearings(highlightDto, title, shortDescription);
+    if (checkForMicrobearings(mergedTitleAndDescription)) {
+      addNewReasoning(highlightDto, "Microbearing wheels detected at '%s'".formatted(mergedTitleAndDescription),
+          REJECT);
+    }
   }
 
-  private void checkForMicrobearings(EbayHighlightDto highlightDto, String title, String shortDescription) {
+  protected static boolean checkForMicrobearings(String mergedTitleAndDescription) {
     String[] microBearingsPatterns = {
-        "\\bmicrobearing\\b",
-        "\\bmicro\\s+bearing\\b",
+        "\\bmicrobearing",
+        "\\bmicro\\s+bearing",
     };
-    String mergedTitleAndDescription = title + shortDescription;
+
     for (String patternStr : microBearingsPatterns) {
       Pattern pattern = Pattern.compile(patternStr, Pattern.CASE_INSENSITIVE);
       Matcher matcher = pattern.matcher(mergedTitleAndDescription);
 
       if (matcher.find()) {
-        addNewReasoning(highlightDto, "Microbearing wheels detected at '%s'".formatted(mergedTitleAndDescription),
-            REJECT);
+        return true;
       }
     }
+    return false;
   }
 
-  @Override
-  public boolean isApplicableTo(ProductVariantEnum productVariant) {
-    return productVariant.equals(ProductVariantEnum.LABEDA_80_MM_WHEELS);
-  }
 }
