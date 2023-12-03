@@ -10,14 +10,17 @@ import io.irw.hawk.dto.ebay.EbayFindingDto;
 import io.irw.hawk.dto.merchandise.MerchandiseVerdictType;
 import io.irw.hawk.dto.merchandise.ProductVariantEnum;
 import io.irw.hawk.dto.ebay.EbayHighlightDto;
+import io.irw.hawk.dto.merchandise.ProductVariantPreferencesDto;
 import io.irw.hawk.scraper.model.MerchandiseReasoningLog;
 import io.irw.hawk.scraper.model.ProcessingPipelineStep;
+import io.irw.hawk.scraper.service.domain.ShippingAndHandlingCostService;
 import io.irw.hawk.scraper.service.matchers.BaselineItemDataMatcher;
 import io.irw.hawk.scraper.service.matchers.ItemSummaryMatcher;
 import io.irw.hawk.scraper.service.processors.skates.parts.extractors.WheelCountExtractor;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -30,9 +33,8 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class LabedaWheelsInterestMatcher implements ItemSummaryMatcher {
 
-  static BigDecimal DESIRED_PRICE_PER_WHEEL = BigDecimal.valueOf(5);
+  ShippingAndHandlingCostService shippingAndHandlingCostService;
   static int DESIRED_MIN_WHEEL_COUNT = 4;
-  static BigDecimal MEEST_SHIPPING_AND_HANDLING_PER_SHIPPING = BigDecimal.valueOf(4);
 
   @Override
   public List<Class<? extends ProcessingPipelineStep>> dependsOn() {
@@ -68,17 +70,24 @@ public class LabedaWheelsInterestMatcher implements ItemSummaryMatcher {
 
   private List<MerchandiseReasoningLog> checkPricePerPiece(EbayHighlightDto highlightDto,
       BigDecimal pricePerPieceWithShippingUsd) {
+    ProductVariantPreferencesDto productVariantPreferences = shippingAndHandlingCostService
+        .resolveProductVariantPreferences(highlightDto);
+    Optional<BigDecimal> meestShippingAndHandlingCost = shippingAndHandlingCostService
+        .calculateMeestShippingAndHandlingCost(highlightDto, productVariantPreferences);
+    BigDecimal desiredCostPerPieceUsd = productVariantPreferences.getDesiredCostPerPieceUsd();
+
     List<MerchandiseReasoningLog> result = new ArrayList<>();
     EbayFindingDto ebayFindingDto = highlightDto.getEbayFinding();
     int numberOfPieces = ebayFindingDto.getNumberOfPieces().get();
-    if (pricePerPieceWithShippingUsd.compareTo(DESIRED_PRICE_PER_WHEEL) > 0) {
+
+    if (pricePerPieceWithShippingUsd.compareTo(desiredCostPerPieceUsd) > 0) {
       addNewReasoning(highlightDto, String.format("Too pricey: %s$ per wheel > %s$", pricePerPieceWithShippingUsd,
-          DESIRED_PRICE_PER_WHEEL), NOT_INTERESTING);
+          desiredCostPerPieceUsd), NOT_INTERESTING);
     } else if (numberOfPieces < DESIRED_MIN_WHEEL_COUNT) {
       BigDecimal priceBenefit = BigDecimal.valueOf(numberOfPieces)
-          .multiply(DESIRED_PRICE_PER_WHEEL)
+          .multiply(desiredCostPerPieceUsd)
           .subtract((BigDecimal.valueOf(numberOfPieces).multiply(pricePerPieceWithShippingUsd)));
-      if (priceBenefit.compareTo(MEEST_SHIPPING_AND_HANDLING_PER_SHIPPING) < 0) {
+      if (priceBenefit.compareTo(meestShippingAndHandlingCost.get()) < 0) {
         addNewReasoning(highlightDto,
             String.format("Items are cheap, but too small quantity for Meest shipping&handling: %s$ price "
                 + "benefit", priceBenefit), NOT_INTERESTING);

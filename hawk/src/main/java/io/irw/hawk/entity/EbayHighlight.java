@@ -15,6 +15,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import java.math.BigDecimal;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -66,5 +67,17 @@ public class EbayHighlight {
   @Column(name = "human_verdict", columnDefinition = "merchandise_verdict_type")
   @Type(PostgreSQLEnumType.class)
   MerchandiseVerdictType humanVerdict;
+
+  @Column(name = "expected_buy_now_profit_usd")
+  private BigDecimal expectedBuyNowProfitUsd;
+
+  @Column(name = "expected_buy_now_profit_pct")
+  private BigDecimal expectedBuyNowProfitPct;
+
+  @Column(name = "possible_auction_profit_usd")
+  private BigDecimal possibleAuctionProfitUsd;
+
+  @Column(name = "possible_auction_profit_pct")
+  private BigDecimal possibleAuctionProfitPct;
 
 }

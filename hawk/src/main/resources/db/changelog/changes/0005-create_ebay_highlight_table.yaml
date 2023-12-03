@@ -40,7 +40,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: reasoning_summary
-                  type: VARCHAR(255)  # Adjust the data type and length as needed
+                  type: VARCHAR
                   constraints:
                     nullable: false
               - column:
@@ -51,3 +51,15 @@ databaseChangeLog:
               - column:
                   name: human_verdict
                   type: merchandise_verdict_type
+              - column:
+                  name: expected_buy_now_profit_usd
+                  type: NUMERIC(8,2)
+              - column:
+                  name: expected_buy_now_profit_pct
+                  type: NUMERIC(8,2)
+              - column:
+                  name: possible_auction_profit_usd
+                  type: NUMERIC(8,2)
+              - column:
+                  name: possible_auction_profit_pct
+                  type: NUMERIC(8,2)
