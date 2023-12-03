@@ -114,10 +114,10 @@ public class PriceExtractor implements ItemSummaryDataExtractor {
       BigDecimal shippingCost) {
     return priceWithoutShipping
         .add(shippingCost)
-        .divide(BigDecimal.valueOf(pieces), RoundingMode.HALF_UP);
+        .divide(BigDecimal.valueOf(pieces), 2, RoundingMode.HALF_UP);
   }
 
-  private static BigDecimal calculateExpectedProfitUsd(BigDecimal pricePerPieceWithShipping,
+  protected static BigDecimal calculateExpectedProfitUsd(BigDecimal pricePerPieceWithShipping,
       BigDecimal referencePricePerPiece, Integer pieces,
       BigDecimal meestShippingAndHandlingOverhead) {
     return referencePricePerPiece
@@ -126,12 +126,14 @@ public class PriceExtractor implements ItemSummaryDataExtractor {
         .subtract(meestShippingAndHandlingOverhead);
   }
 
-  private static BigDecimal calculateExpectedProfitPct(BigDecimal expectedProfitUsd, BigDecimal listingPriceUsd,
+  protected static BigDecimal calculateExpectedProfitPct(BigDecimal expectedProfitUsd, BigDecimal listingPriceUsd,
       BigDecimal shippingPriceUsd,
       BigDecimal meestShippingAndHandlingOverhead) {
     BigDecimal totalExpencesForListing = listingPriceUsd
         .add(shippingPriceUsd)
         .add(meestShippingAndHandlingOverhead);
-    return expectedProfitUsd.divide(totalExpencesForListing, RoundingMode.HALF_DOWN);
+    return expectedProfitUsd
+        .multiply(BigDecimal.valueOf(100))
+        .divide(totalExpencesForListing, 2, RoundingMode.HALF_DOWN);
   }
 }
