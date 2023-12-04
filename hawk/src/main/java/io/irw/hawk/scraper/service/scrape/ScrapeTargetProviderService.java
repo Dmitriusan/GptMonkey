@@ -1,5 +1,6 @@
 package io.irw.hawk.scraper.service.scrape;
 
+import io.irw.hawk.configuration.HawkProperties;
 import io.irw.hawk.dto.merchandise.ProductVariantEnum;
 import java.util.Optional;
 import java.util.Queue;
@@ -14,9 +15,11 @@ import org.springframework.stereotype.Service;
 public class ScrapeTargetProviderService {
   ProductCatalogService productCatalogService;
   Queue<ProductVariantEnum> searchTargets;
+  HawkProperties hawkProperties;
 
-  public ScrapeTargetProviderService(ProductCatalogService productCatalogService) {
+  public ScrapeTargetProviderService(ProductCatalogService productCatalogService, HawkProperties hawkProperties) {
     this.productCatalogService = productCatalogService;
+    this.hawkProperties = hawkProperties;
     searchTargets = new java.util.LinkedList<>(productCatalogService.getProducts());
   }
 
