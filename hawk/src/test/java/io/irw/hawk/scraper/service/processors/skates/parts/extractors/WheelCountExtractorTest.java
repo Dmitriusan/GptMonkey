@@ -177,11 +177,6 @@ class WheelCountExtractorTest {
     ));
 
     assertEquals(Optional.empty(), extractNumberOfWheelsFromText(
-        "Labeda Shooters inline skate 80mm wheels (4)",
-        ""
-    ));
-
-    assertEquals(Optional.empty(), extractNumberOfWheelsFromText(
         "4 Labeda Lite Soft Gripper Inline Roller Hockey Wheels 80mm w/Bearings +1",
         ""
     ));
@@ -203,6 +198,11 @@ class WheelCountExtractorTest {
 
     assertEquals(Optional.of(4), extractNumberOfWheelsFromText(
         "Labeda inline wheels gripper 72mm medium durometer 80A (four wheels)",
+        ""
+    ));
+
+    assertEquals(Optional.of(4), extractNumberOfWheelsFromText(
+        "Labeda Shooters inline skate 80mm wheels (4)",
         ""
     ));
 

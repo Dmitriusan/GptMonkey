@@ -1,3 +1,14 @@
+hawk:
+  ai: true
+  sampling:
+    enabled: false
+    rate: 0.1
+  subset:
+    enabled: true
+    products:
+      variants:
+        - LABEDA_80_MM_WHEELS
+
 spring:
   banner:
     location: classpath:ehawk-banner.txt

@@ -64,8 +64,9 @@ public class WheelCountExtractor implements ItemSummaryDataExtractor {
     String shortDescription = lowerCase(shortDescriptionWithMixedCase);
     // Try to match an exact number
     String[] multipleWheelPatterns = {
-        "\\b(\\d+)\\s*\\-?\\s*(?:pieces|pcs|pack|set|wheels)\\b",
-        "\\b(?:lot|set|pack)\\s+of\\s+(\\d+)",
+        "\\b(\\d+)\\s*\\-?\\s*(?:pieces|pcs|pack|set|wheels)",
+        "\\b(?:lot|set|pack|pak|pac)\\s+of\\s+(\\d+)",
+        "\\((\\d+)\\s*(?:\\)|wheel|wheels)",
     };
     String mergedTitleAndDescription = mergedTexts(title, shortDescription);
     for (String patternStr : multipleWheelPatterns) {

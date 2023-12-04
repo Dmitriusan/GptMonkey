@@ -4,7 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/GptMonkey.iml" filepath="$PROJECT_DIR$/GptMonkey.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Hawk.iml" filepath="$PROJECT_DIR$/.idea/modules/Hawk.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Hawk.main.iml" filepath="$PROJECT_DIR$/.idea/modules/Hawk.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/io.irw.Hawk.main.iml" filepath="$PROJECT_DIR$/.idea/modules/io.irw.Hawk.main.iml" />
     </modules>
   </component>
 </project>
