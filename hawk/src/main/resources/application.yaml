@@ -1,5 +1,8 @@
 hawk:
-  ai: true
+  ai:
+    enabled: true
+    features:
+      piece_count_matching: true
   sampling:
     enabled: false
     rate: 0.1

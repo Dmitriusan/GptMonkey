@@ -10,6 +10,7 @@ import com.theokanning.openai.completion.chat.ChatFunction;
 import com.theokanning.openai.completion.chat.ChatMessage;
 import com.theokanning.openai.completion.chat.ChatMessageRole;
 import com.theokanning.openai.service.FunctionExecutor;
+import io.irw.hawk.configuration.HawkProperties;
 import io.irw.hawk.dto.ebay.EbayHighlightDto;
 import io.irw.hawk.scraper.ai.LlmQuery;
 import io.irw.hawk.scraper.model.ProcessingPipelineStep;
@@ -38,6 +39,7 @@ public class AiWheelCountExtractor extends WheelCountExtractor {
       How many inline skate wheels are sold in this Ebay listing\s
       according to the listing description provided by the user?""";
   LlmQueryService llmQueryService;
+  HawkProperties hawkProperties;
 
   @Override
   public List<Class<? extends ProcessingPipelineStep>> dependsOn() {
@@ -46,9 +48,10 @@ public class AiWheelCountExtractor extends WheelCountExtractor {
 
   @Override
   public boolean isApplicableTo(EbayHighlightDto highlightDto) {
-    return super.isApplicableTo(highlightDto)
-        && highlightDto.getEbayFinding().getNumberOfPieces().isEmpty()
-        && highlightDto.getNewItem();
+    return hawkProperties.getAi().isEnabled() && hawkProperties.getAi().getFeatures().isPieceCountMatching()
+            && super.isApplicableTo(highlightDto)
+            && highlightDto.getEbayFinding().getNumberOfPieces().isEmpty()
+            && highlightDto.getNewItem();
   }
 
   @Override

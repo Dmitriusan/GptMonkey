@@ -1,5 +1,6 @@
 package io.irw.hawk.scraper.service.scrape;
 
+import io.irw.hawk.configuration.HawkProperties;
 import io.irw.hawk.dto.ebay.EbayHighlightDto;
 import io.irw.hawk.dto.merchandise.HawkScrapeRunDto;
 import io.irw.hawk.scraper.service.domain.EbayFindingService;
@@ -22,6 +23,7 @@ public class ScrapeRunSummaryPrintingService {
 
   EbayFindingService ebayFindingService;
   EbayHighlightService ebayHighlightService;
+  HawkProperties hawkProperties;
 
   public void printScrapeRunSummary(HawkScrapeRunDto hawkScrapeRunDto) {
     ScrapeRunSummaryDto runSummary = ebayHighlightService.getScrapeRunSummary(hawkScrapeRunDto);
@@ -31,6 +33,9 @@ public class ScrapeRunSummaryPrintingService {
     log.info(StringUtils.repeat("=", 80));
     log.info("Scrape run summary for Run ID {} ({})", hawkScrapeRunDto.getId(), hawkScrapeRunDto.getProductVariant());
     log.info("Total: {} items processed", runSummary.getTotalHighligts());
+
+    logWarnings();
+
     runSummary.getVerdictCounts()
         .forEach((key, value) -> log.info("  {} items with verdict {}", value, key));
 
@@ -65,6 +70,20 @@ public class ScrapeRunSummaryPrintingService {
     log.info(" Possible profit: {} USD, {} %", highlightDto.getPossibleAuctionProfitUsd().map(Object::toString).orElse("N/A"),
         highlightDto.getPossibleAuctionProfitPct().map(Object::toString).orElse("N/A"));
     log.info(StringUtils.repeat("-", 80));
+  }
+
+  private void logWarnings() {
+    if (hawkProperties.someAiFeaturesAreDisabled()) {
+      log.warn(" ATTENTION: some AI features are disabled");
+    }
+
+    if (hawkProperties.samplingIsEnabled()) {
+      log.warn(" ATTENTION: sampling is enabled, not all entities are processed");
+    }
+
+    if (hawkProperties.subsetIsEnabled()) {
+      log.warn(" ATTENTION: subsetting is enabled, not all product variants are processed");
+    }
   }
 
 }

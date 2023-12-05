@@ -5,6 +5,7 @@ import static io.irw.hawk.scraper.model.ProcessingPipelineStep.linearExecutionGr
 import com.ebay.buy.browse.api.ItemSummaryApi;
 import com.ebay.buy.browse.model.ItemSummary;
 import com.ebay.buy.browse.model.SearchPagedCollection;
+import io.irw.hawk.configuration.HawkProperties;
 import io.irw.hawk.dto.ebay.EbayFindingDto;
 import io.irw.hawk.dto.ebay.EbayHighlightDto;
 import io.irw.hawk.dto.ebay.EbaySellerDto;
@@ -29,6 +30,7 @@ import io.irw.hawk.scraper.service.processors.ProductScrapeProcessor;
 import java.time.Instant;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -60,6 +62,7 @@ public class ScraperService {
   EbayHighlightService ebayHighlightService;
 
   ScrapeRunSummaryPrintingService scrapeRunSummaryPrintingService;
+  HawkProperties hawkProperties;
 
   private AtomicBoolean isScraping = new AtomicBoolean(false);
 
@@ -83,8 +86,11 @@ public class ScraperService {
         continue;
       }
 
+      Random random = new Random();
       for (ItemSummary itemSummary : result.getItemSummaries()) {
-        processItemSummary(targetProductVariant, itemSummary, hawkScrapeRunDto);
+        if (!hawkProperties.getSampling().isEnabled() || random.nextDouble() < hawkProperties.getSampling().getRate()) {
+          processItemSummary(targetProductVariant, itemSummary, hawkScrapeRunDto);
+        }
       }
     }
     scrapeRunSummaryPrintingService.printScrapeRunSummary(hawkScrapeRunDto);
