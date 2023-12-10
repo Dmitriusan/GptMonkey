@@ -3,6 +3,7 @@ package io.irw.hawk.scraper.service.processors.skates.parts.matchers;
 import static io.irw.hawk.dto.merchandise.MerchandiseVerdictType.UNPROCESSABLE;
 
 import com.ebay.buy.browse.model.ItemSummary;
+import io.irw.hawk.dto.merchandise.GroupEnum;
 import io.irw.hawk.dto.merchandise.ProductVariantEnum;
 import io.irw.hawk.dto.ebay.EbayHighlightDto;
 import io.irw.hawk.scraper.model.ProcessingPipelineStep;
@@ -43,6 +44,8 @@ public class WheelCountMatcher implements ItemSummaryMatcher {
 
   @Override
   public boolean isApplicableTo(ProductVariantEnum productVariant) {
-    return productVariant.equals(ProductVariantEnum.LABEDA_80_MM_WHEELS);
+    return productVariant.getGroup().equals(
+            GroupEnum.WHEELS
+    );
   }
 }

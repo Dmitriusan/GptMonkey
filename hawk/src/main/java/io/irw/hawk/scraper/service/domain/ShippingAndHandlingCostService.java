@@ -33,6 +33,24 @@ public class ShippingAndHandlingCostService {
             .targetMarketPricePerPieceUsd(BigDecimal.valueOf(7.5))
             .weightOfPieceKg(BigDecimal.valueOf(0.15))
             .build();
+      case UNDERCOVER_80_MM_WHEELS:
+        return ProductVariantPreferencesDto.builder()
+                .productVariant(productVariant)
+                .desiredCostPerPieceUsd(BigDecimal.valueOf(7))
+                .typicalPricePerPieceUsd(BigDecimal.valueOf(15))
+                .meestHandlingPerPieceUsd(BigDecimal.valueOf(2))
+                .targetMarketPricePerPieceUsd(BigDecimal.valueOf(15))
+                .weightOfPieceKg(BigDecimal.valueOf(0.15))
+                .build();
+      case UNDERCOVER_110_MM_WHEELS:
+        return ProductVariantPreferencesDto.builder()
+                .productVariant(productVariant)
+                .desiredCostPerPieceUsd(BigDecimal.valueOf(8))
+                .typicalPricePerPieceUsd(BigDecimal.valueOf(15))
+                .meestHandlingPerPieceUsd(BigDecimal.valueOf(2))
+                .targetMarketPricePerPieceUsd(BigDecimal.valueOf(17.3))
+                .weightOfPieceKg(BigDecimal.valueOf(0.15))
+                .build();
       default:
         throw new IllegalArgumentException("Unsupported product variant: " + productVariant);
     }

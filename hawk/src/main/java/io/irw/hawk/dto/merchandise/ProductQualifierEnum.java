@@ -1,6 +1,6 @@
 package io.irw.hawk.dto.merchandise;
 
-import static io.irw.hawk.dto.merchandise.ProductVariantEnum.LABEDA_80_MM_WHEELS;
+import static io.irw.hawk.dto.merchandise.ProductVariantEnum.*;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -14,7 +14,11 @@ import org.apache.commons.lang3.StringUtils;
 public enum ProductQualifierEnum {
 
   NEW_LABEDA_80_MM_WHEELS(LABEDA_80_MM_WHEELS, "New"),
-  USED_LABEDA_80_MM_WHEELS(LABEDA_80_MM_WHEELS, "Used");
+  USED_LABEDA_80_MM_WHEELS(LABEDA_80_MM_WHEELS, "Used"),
+  NEW_UNDERCOVER_80_MM_WHEELS(UNDERCOVER_80_MM_WHEELS, "New"),
+  USED_UNDERCOVER_80_MM_WHEELS(UNDERCOVER_80_MM_WHEELS, "Used"),
+  NEW_UNDERCOVER_110_MM_WHEELS(UNDERCOVER_110_MM_WHEELS, "New"),
+  USED_UNDERCOVER_110_MM_WHEELS(UNDERCOVER_110_MM_WHEELS, "Used");
 
   String name;
   ProductVariantEnum productVariant;

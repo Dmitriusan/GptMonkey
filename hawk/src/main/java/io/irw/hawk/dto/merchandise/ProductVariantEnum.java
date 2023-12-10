@@ -11,7 +11,9 @@ import org.apache.commons.lang3.StringUtils;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public enum ProductVariantEnum {
 
-  LABEDA_80_MM_WHEELS(GroupEnum.WHEELS, "Labeda 80mm wheels");
+  LABEDA_80_MM_WHEELS(GroupEnum.WHEELS, "Labeda 80mm wheels"),
+  UNDERCOVER_80_MM_WHEELS(GroupEnum.WHEELS, "Undercover 80mm wheels"),
+  UNDERCOVER_110_MM_WHEELS(GroupEnum.WHEELS, "Undercover 100mm wheels");
 
   String name;
   GroupEnum group;

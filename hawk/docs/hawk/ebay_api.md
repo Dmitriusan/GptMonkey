@@ -1,6 +1,10 @@
 # To generate classes from OpenAPI specification
 * call gradle task `generateEbayApiClient` to generate classes from OpenAPI specification
 
+# Categories and their IDs
+* See https://pages.ebay.com/sellerinformation/news/categorychanges.html
+  * for 2023, https://ir.ebaystatic.com/pictures/aw/pics/categorychanges/2023/US_Category_Changes_May2023.pdf
+
 # Limits
 * https://developer.ebay.com/develop/apis/api-call-limits
 

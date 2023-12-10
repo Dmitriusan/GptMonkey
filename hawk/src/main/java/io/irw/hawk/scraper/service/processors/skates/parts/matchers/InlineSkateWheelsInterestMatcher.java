@@ -7,6 +7,7 @@ import static io.irw.hawk.dto.merchandise.MerchandiseVerdictType.UNPROCESSABLE;
 
 import com.ebay.buy.browse.model.ItemSummary;
 import io.irw.hawk.dto.ebay.EbayFindingDto;
+import io.irw.hawk.dto.merchandise.GroupEnum;
 import io.irw.hawk.dto.merchandise.MerchandiseVerdictType;
 import io.irw.hawk.dto.merchandise.ProductVariantEnum;
 import io.irw.hawk.dto.ebay.EbayHighlightDto;
@@ -31,7 +32,7 @@ import org.springframework.stereotype.Service;
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
-public class LabedaWheelsInterestMatcher implements ItemSummaryMatcher {
+public class InlineSkateWheelsInterestMatcher implements ItemSummaryMatcher {
 
   ShippingAndHandlingCostService shippingAndHandlingCostService;
   static int DESIRED_MIN_WHEEL_COUNT = 4;
@@ -98,6 +99,8 @@ public class LabedaWheelsInterestMatcher implements ItemSummaryMatcher {
 
   @Override
   public boolean isApplicableTo(ProductVariantEnum productVariant) {
-    return productVariant.equals(ProductVariantEnum.LABEDA_80_MM_WHEELS);
+    return productVariant.getGroup().equals(
+        GroupEnum.WHEELS
+    );
   }
 }

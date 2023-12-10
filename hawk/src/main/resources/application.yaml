@@ -10,7 +10,9 @@ hawk:
     enabled: true
     products:
       variants:
-        - LABEDA_80_MM_WHEELS
+#        - LABEDA_80_MM_WHEELS
+        - UNDERCOVER_80_MM_WHEELS
+        - UNDERCOVER_110_MM_WHEELS
 
 spring:
   banner:
